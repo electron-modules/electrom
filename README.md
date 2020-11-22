@@ -8,8 +8,8 @@
 
 [npm-image]: https://img.shields.io/npm/v/electrom.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/electrom
-[travis-image]: https://img.shields.io/travis/xudafeng/electrom.svg?style=flat-square
-[travis-url]: https://travis-ci.org/xudafeng/electrom
+[travis-image]: https://api.travis-ci.com/xudafeng/electrom.svg?branch=master
+[travis-url]: https://travis-ci.com/github/xudafeng/electrom
 [coveralls-image]: https://img.shields.io/coveralls/xudafeng/electrom.svg?style=flat-square
 [coveralls-url]: https://coveralls.io/r/xudafeng/electrom?branch=master
 [node-image]: https://img.shields.io/badge/node.js-%3E=_8-green.svg?style=flat-square
