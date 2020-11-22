@@ -6,5 +6,6 @@ const electrom = require('..');
 
 describe('test', () => {
   it('should be ok', () => {
+    assert(electrom);
   });
 });
