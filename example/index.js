@@ -18,7 +18,7 @@ app.on('ready', () => {
     browserWindow: {
       width: 1280,
       height: 800,
-      title: 'test',
+      title: 'electrom',
       show: false,
       acceptFirstMouse: true,
       webPreferences: {
