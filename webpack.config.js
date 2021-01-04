@@ -7,19 +7,19 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist',
-    filename: 'example.js'
+    filename: 'example.js',
   },
   module: {
     rules: [
       {
         test: /\.jsx?/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
       }, {
         test: /\.json$/,
         loader: 'json-loader',
         type: 'javascript/auto',
-        exclude: /node_modules/
+        exclude: /node_modules/,
       }, {
         test: /\.less$/,
         include: /node_modules/,
@@ -63,10 +63,10 @@ module.exports = {
           },
           {
             loader: 'css-loader',
-          }
+          },
         ],
       },
-    ]
+    ],
   },
   devtool: '#eval-source-map',
 };

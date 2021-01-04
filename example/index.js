@@ -20,6 +20,7 @@ const mainUrl = url.format({
   protocol: 'file:',
   query: {
     EVENT_DATA_CHANNEL_NAME,
+    EVENT_ACTION_CHANNEL_NAME,
   },
 });
 
