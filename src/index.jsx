@@ -12,10 +12,10 @@ const useViewModel = (props) => {
   const [data, setData] = useState([]);
 
   const openDevTools = webContentInfo => {
-    ipcRenderer.send('electrom:action', 'openDevTools', webContentInfo);
+    ipcRenderer.send(props.eventActionChannelName, 'openDevTools', webContentInfo);
   };
   const killProcess = item => {
-    ipcRenderer.send('electrom:action', 'killProcess', item);
+    ipcRenderer.send(props.eventActionChannelName, 'killProcess', item);
   };
 
   const columns = [
@@ -85,11 +85,11 @@ const useViewModel = (props) => {
 
   const updateAppMetrics = (_, appMetrics) => setData(appMetrics);
 
-  const { eventChannelName } = props;
+  const { eventDataChannelName } = props;
   useEffect(() => {
-    ipcRenderer.on(eventChannelName, updateAppMetrics);
+    ipcRenderer.on(eventDataChannelName, updateAppMetrics);
     return () => {
-      ipcRenderer.removeListener(eventChannelName, updateAppMetrics);
+      ipcRenderer.removeListener(eventDataChannelName, updateAppMetrics);
     };
   }, []);
   
@@ -120,7 +120,8 @@ const StatusBoard = (props) => {
 }
 
 StatusBoard.PropTypes = {
-  eventChannelName: PropTypes.string,
+  eventDataChannelName: PropTypes.string.isRequired,
+  eventActionChannelName: PropTypes.string.isRequired,
 };
 
 export default StatusBoard;

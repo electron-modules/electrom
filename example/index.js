@@ -10,13 +10,16 @@ const monitor = new Monitor({
   interval: 3 * 1000,
 });
 
-const { EVENT_CHANNEL_NAME: MONITOR_EVENT_CHANNEL_NAME } = Monitor;
+const {
+  EVENT_DATA_CHANNEL_NAME,
+  EVENT_ACTION_CHANNEL_NAME,
+} = Monitor;
 
 const mainUrl = url.format({
   pathname: path.join(__dirname, 'renderer', 'main.html'),
   protocol: 'file:',
   query: {
-    MONITOR_EVENT_CHANNEL_NAME: MONITOR_EVENT_CHANNEL_NAME,
+    EVENT_DATA_CHANNEL_NAME,
   },
 });
 
@@ -40,12 +43,12 @@ app.on('ready', () => {
   win.loadURL(mainUrl);
   win.once('ready-to-show', () => {
     win.show();
-    monitor.on(MONITOR_EVENT_CHANNEL_NAME, (data) => {
-      win.webContents.send(MONITOR_EVENT_CHANNEL_NAME, data);
+    monitor.on(EVENT_DATA_CHANNEL_NAME, (data) => {
+      win.webContents.send(EVENT_DATA_CHANNEL_NAME, data);
     });
     monitor.start();
     win.webContents.on('ipc-message', (_, eventName, ...args) => {
-      if (eventName === 'electrom:action') {
+      if (eventName === EVENT_ACTION_CHANNEL_NAME) {
         const action = args[0];
         const params = args[1];
         if (action === 'openDevTools') {

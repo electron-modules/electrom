@@ -9,4 +9,9 @@ const container = document.querySelector('#app');
 
 const params = new URLSearchParams(location.search);
 
-ReactDOM.render(<StatusBoard eventChannelName={params.get('MONITOR_EVENT_CHANNEL_NAME')} />, container);
+ReactDOM.render((
+  <StatusBoard
+    eventDataChannelName={params.get('EVENT_DATA_CHANNEL_NAME')}
+    eventActionChannelName={params.get('EVENT_ACTION_CHANNEL_NAME')}
+  />
+), container);
