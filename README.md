@@ -17,7 +17,9 @@
 [download-image]: https://img.shields.io/npm/dm/electrom.svg?style=flat-square
 [download-url]: https://npmjs.org/package/electrom
 
-> electrom
+> Electrom is a resource management solution for Electron applications, which is convenient for performance management and friendly debugging of multiple windows.
+
+![](./demo.png)
 
 ## Installment
 
