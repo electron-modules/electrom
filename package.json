@@ -11,7 +11,9 @@
     "electrom": "./bin/electrom.js"
   },
   "files": [
-    "lib"
+    "lib/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.less"
   ],
   "main": "index.js",
   "repository": {

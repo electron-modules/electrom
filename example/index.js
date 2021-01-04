@@ -3,7 +3,7 @@
 const url = require('url');
 const path = require('path');
 const WindowManager = require('electron-windows');
-const { app, webContents } = require('electron');
+const { app } = require('electron');
 const { Monitor } = require('..');
 
 const monitor = new Monitor({

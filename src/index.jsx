@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button } from 'antd';
+import { Table, Button, Popover } from 'antd';
 import filesize from 'filesize';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 
 import styles from './index.module.less';
 
-const { ipcRenderer } = window.require('electron');
-
 const useViewModel = (props) => {
+  const { ipcRenderer } = props;
   const [data, setData] = useState([]);
 
   const openDevTools = webContentInfo => {
@@ -51,9 +50,17 @@ const useViewModel = (props) => {
       render: webContentInfo => {
         if (!webContentInfo) return null;
         return (
-          <div>
-            {`type:${webContentInfo.type}|id:${webContentInfo.id}|${webContentInfo.url}`}
-          </div>
+          <Popover content={(
+            <div>
+              <div>{`id:${webContentInfo.id}|type:${webContentInfo.type}`}</div>
+              <textarea style={{ minHeight: '30vh' }}>{webContentInfo.url}</textarea>
+            </div>
+          )} title={null} trigger="hover">
+            <div>
+              <div>{`id:${webContentInfo.id}|type:${webContentInfo.type}`}</div>
+              <pre>{webContentInfo.url}</pre>
+            </div>
+          </Popover>
         );
       },
     },
@@ -122,6 +129,7 @@ const StatusBoard = (props) => {
 StatusBoard.PropTypes = {
   eventDataChannelName: PropTypes.string.isRequired,
   eventActionChannelName: PropTypes.string.isRequired,
+  ipcRenderer: PropTypes.object,
 };
 
 export default StatusBoard;
