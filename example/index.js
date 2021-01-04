@@ -47,18 +47,7 @@ app.on('ready', () => {
     monitor.on(EVENT_DATA_CHANNEL_NAME, (data) => {
       win.webContents.send(EVENT_DATA_CHANNEL_NAME, data);
     });
+    monitor.bindEventToWindow(win);
     monitor.start();
-    win.webContents.on('ipc-message', (_, eventName, ...args) => {
-      if (eventName === EVENT_ACTION_CHANNEL_NAME) {
-        const action = args[0];
-        const params = args[1];
-        if (action === 'openDevTools') {
-          const webContent = webContents.fromId(params.id);
-          webContent.openDevTools();
-        } else if (action === 'killProcess') {
-          process.kill(params.pid);
-        }
-      }
-    });
   });
 });
