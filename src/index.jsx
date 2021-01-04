@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table } from 'antd';
+import { Table, Button } from 'antd';
 import filesize from 'filesize';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -10,6 +10,14 @@ const { ipcRenderer } = window.require('electron');
 
 const useViewModel = (props) => {
   const [data, setData] = useState([]);
+
+  const openDevTools = webContentInfo => {
+    ipcRenderer.send('electrom:action', 'openDevTools', webContentInfo);
+  };
+  const killProcess = item => {
+    ipcRenderer.send('electrom:action', 'killProcess', item);
+  };
+
   const columns = [
     {
       title: 'PID',
@@ -44,7 +52,31 @@ const useViewModel = (props) => {
         if (!webContentInfo) return null;
         return (
           <div>
-            {`${webContentInfo.type}|${webContentInfo.id}|${webContentInfo.url}`}
+            {`type:${webContentInfo.type}|id:${webContentInfo.id}|${webContentInfo.url}`}
+          </div>
+        );
+      },
+    },
+    {
+      title: 'control',
+      render: item => {
+        const webContentInfo = item.webContentInfo;
+        return (
+          <div className={styles.buttons}>
+            <Button
+              size="small"
+              onClick={() => killProcess(item)}
+            >
+              kill
+            </Button>
+            {webContentInfo && !webContentInfo.url.startsWith('devtools:') && (
+              <Button
+                size="small"
+                onClick={() => openDevTools(webContentInfo)}
+              >
+                devtool
+              </Button>
+            )}
           </div>
         );
       },
@@ -81,6 +113,7 @@ const StatusBoard = (props) => {
         dataSource={data}
         pagination={false}
         size="small"
+        tableLayout="fixed"
       />
     </div>
   );

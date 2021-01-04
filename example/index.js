@@ -3,11 +3,11 @@
 const url = require('url');
 const path = require('path');
 const WindowManager = require('electron-windows');
-const { app } = require('electron');
+const { app, webContents } = require('electron');
 const { Monitor } = require('..');
 
 const monitor = new Monitor({
-  interval: 1000,
+  interval: 3 * 1000,
 });
 
 const { EVENT_CHANNEL_NAME: MONITOR_EVENT_CHANNEL_NAME } = Monitor;
@@ -44,5 +44,17 @@ app.on('ready', () => {
       win.webContents.send(MONITOR_EVENT_CHANNEL_NAME, data);
     });
     monitor.start();
+    win.webContents.on('ipc-message', (_, eventName, ...args) => {
+      if (eventName === 'electrom:action') {
+        const action = args[0];
+        const params = args[1];
+        if (action === 'openDevTools') {
+          const webContent = webContents.fromId(params.id);
+          webContent.openDevTools();
+        } else if (action === 'killProcess') {
+          process.kill(params.pid);
+        }
+      }
+    });
   });
 });
