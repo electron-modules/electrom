@@ -45,6 +45,10 @@ electrom(100)
   }
 ```
 
+## TODO
+
+- [ ] usage summary
+
 ## License
 
 The MIT License (MIT)
