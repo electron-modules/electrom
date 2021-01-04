@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Table } from 'antd';
 import filesize from 'filesize';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 
 import styles from './index.module.less';
 
 const { ipcRenderer } = window.require('electron');
 
-const useViewModel = () => {
+const useViewModel = (props) => {
   const [data, setData] = useState([]);
   const columns = [
     {
@@ -52,10 +53,11 @@ const useViewModel = () => {
 
   const updateAppMetrics = (_, appMetrics) => setData(appMetrics);
 
+  const { eventChannelName } = props;
   useEffect(() => {
-    ipcRenderer.on('electrom:appmetrics', updateAppMetrics);
+    ipcRenderer.on(eventChannelName, updateAppMetrics);
     return () => {
-      ipcRenderer.removeListener('electrom:appmetrics', updateAppMetrics);
+      ipcRenderer.removeListener(eventChannelName, updateAppMetrics);
     };
   }, []);
   
@@ -85,6 +87,7 @@ const StatusBoard = (props) => {
 }
 
 StatusBoard.PropTypes = {
+  eventChannelName: PropTypes.string,
 };
 
 export default StatusBoard;

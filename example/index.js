@@ -3,12 +3,21 @@
 const url = require('url');
 const path = require('path');
 const WindowManager = require('electron-windows');
-const { app, webContents } = require('electron');
-const _ = require('lodash');
+const { app } = require('electron');
+const { Monitor } = require('..');
+
+const monitor = new Monitor({
+  interval: 1000,
+});
+
+const { EVENT_CHANNEL_NAME: MONITOR_EVENT_CHANNEL_NAME } = Monitor;
 
 const mainUrl = url.format({
   pathname: path.join(__dirname, 'renderer', 'main.html'),
   protocol: 'file:',
+  query: {
+    MONITOR_EVENT_CHANNEL_NAME: MONITOR_EVENT_CHANNEL_NAME,
+  },
 });
 
 app.on('ready', () => {
@@ -31,24 +40,9 @@ app.on('ready', () => {
   win.loadURL(mainUrl);
   win.once('ready-to-show', () => {
     win.show();
+    monitor.on(MONITOR_EVENT_CHANNEL_NAME, (data) => {
+      win.webContents.send(MONITOR_EVENT_CHANNEL_NAME, data);
+    });
+    monitor.start();
   });
-  setInterval(() => {
-    const allWebContents = webContents.getAllWebContents();
-    const webContentsInfo = allWebContents.map(webContentInfo => ({
-      type: webContentInfo.getType(),
-      id: webContentInfo.id,
-      pid: webContentInfo.getOSProcessId(),
-      url: webContentInfo.getURL(),
-    }));
-    const appMetrics = app.getAppMetrics()
-      .map(appMetric => {
-        const webContentInfo = webContentsInfo.find(webContentInfo => webContentInfo.pid === appMetric.pid);
-        if (!webContentInfo) return appMetric;
-        return {
-          ...appMetric,
-          webContentInfo,
-        };
-      });
-    win.webContents.send('electrom:appmetrics', appMetrics);
-  }, 3000);
 });
