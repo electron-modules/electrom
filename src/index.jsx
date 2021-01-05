@@ -49,16 +49,26 @@ const useViewModel = (props) => {
       dataIndex: 'webContentInfo',
       render: webContentInfo => {
         if (!webContentInfo) return null;
+        const urlObj = new URL(webContentInfo.url);
+        const extraInfo = [];
+        if (urlObj.protocol) {
+          extraInfo.push(urlObj.protocol);
+        }
+        if (urlObj.hash) {
+          extraInfo.push(urlObj.hash);
+        }
+        if (urlObj.search) {
+          extraInfo.push(urlObj.search);
+        }
         return (
           <Popover content={(
             <div>
-              <div>{`id:${webContentInfo.id}|type:${webContentInfo.type}`}</div>
-              <textarea style={{ minHeight: '30vh' }}>{webContentInfo.url}</textarea>
+              <textarea style={{ border: 'none', minHeight: '30vh' }}>{webContentInfo.url}</textarea>
             </div>
           )} title={null} trigger="hover">
             <div>
-              <div>{`id:${webContentInfo.id}|type:${webContentInfo.type}`}</div>
-              <pre>{webContentInfo.url}</pre>
+              <div>id:{webContentInfo.id} type:{webContentInfo.type}</div>
+              <div>{extraInfo.join('|')}</div>
             </div>
           </Popover>
         );
