@@ -1,0 +1,13 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.test1 {
+  background-color: red;
+}
+
+body {
+  background-color: blue;
+}
