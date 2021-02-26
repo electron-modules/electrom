@@ -35,6 +35,9 @@
     #line div.used {
       background: green;
     }
+    #line div.empty {
+      background: green;
+    }
     #code {
       line-height: 14px;
       font-size: 12px;
@@ -51,7 +54,7 @@
     const lines = [];
     const code = document.querySelector('#code');
     const lineElem = document.querySelector('#line');
-    const aaa = (url, data) => {
+    const resolveData = (url, data) => {
       fetch(url)
       .then(response => response.text())
       .then(text => {
@@ -73,6 +76,9 @@
           div.id = `line_${line}`;
           const used = lines.find(item => line >= item.startLine && line < item.endLine);
           div.className = used ? 'used' : '';
+          if (!item.trim()) {
+            div.className = 'empty';
+          }
           div.innerText = line;
           lineElem.appendChild(div);
         });
@@ -86,7 +92,7 @@
         console.log(result);
         const url = 'http://localhost:8080/test/fixture/test-1.css';
         const item = result[url];
-        aaa(url, item);
+        resolveData(url, item);
       });
   </script>
 </html>
