@@ -1,5 +1,7 @@
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
 const { BrowserWindow, app } = require('electron');
 
 // https://chromedevtools.github.io/devtools-protocol/tot/CSS/
@@ -23,23 +25,7 @@ const attachDebuggerToWindow = async (win, options = {}) => {
 
   const takeCoverageDelta = async () => {
     const { coverage, timestamp } = await win.webContents.debugger.sendCommand('CSS.takeCoverageDelta');
-    // console.log(coverage.length, timestamp)
     if (coverage.length) {
-      for (const cov of coverage) {
-        const { styleSheetId, startOffset, endOffset } = cov;
-        const { text } = await win.webContents.debugger.sendCommand('CSS.getStyleSheetText', {
-          styleSheetId,
-        });
-        console.log(text.slice(startOffset, endOffset));
-        const str1 = text.slice(0, startOffset);
-        const str2 = text.slice(startOffset, endOffset);
-        const startLine = str1.split('\n').length;
-        const endLine = startLine + str2.split('\n').length;
-        console.log({
-          startLine,
-          endLine,
-        });
-      }
       onCoverageChange({
         coverage,
         timestamp,
@@ -74,6 +60,7 @@ const attachDebuggerToWindow = async (win, options = {}) => {
   await win.webContents.debugger.sendCommand('CSS.enable');
   await win.webContents.debugger.sendCommand('CSS.startRuleUsageTracking');
 };
+const dataDir = path.join(process.cwd(), 'data');
 
 app.whenReady()
   .then(() => {
@@ -86,10 +73,15 @@ app.whenReady()
 
     attachDebuggerToWindow(win, {
       onMetaChange: (data) => {
-        // console.log(data);
+        fs.writeFileSync('meta.json', JSON.stringify(data, null, 2));
       },
       onCoverageChange: (data) => {
-        // console.log(data);
+        const {
+          coverage,
+          timestamp,
+        } = data;
+        const file = path.join(dataDir, `${timestamp}.json`);
+        fs.writeFileSync(file, JSON.stringify(coverage, null, 2), 'utf-8');
       },
     });
 
