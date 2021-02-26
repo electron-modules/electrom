@@ -7,5 +7,4 @@ Thumbs.db
 *.gz
 *.sw*
 *.un~
-data/
-meta.json
+.electrom
