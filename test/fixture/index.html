@@ -3,13 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
-  <link rel="stylesheet" href="./test.css" />
+  <link rel="stylesheet" href="./test-1.css" />
+  <link rel="stylesheet" href="./test-2.css" />
 </head>
 <body>
-  test
-  <button id="change">change</button>
+  <div class="test2">
+    test2
+  </div>
+  <button id="test1">test1</button>
+  <button id="test2">test2</button>
   <script>
-    document.querySelector('#change')
+    document.querySelector('#test1')
       .addEventListener('click', () => {
         document.body.className = 'test1';
       }, false);

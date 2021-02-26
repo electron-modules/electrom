@@ -4,6 +4,10 @@ body {
   padding: 0;
 }
 
+button {
+  font-size: 32px;
+}
+
 .test1 {
   background-color: red;
 }
