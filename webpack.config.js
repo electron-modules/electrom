@@ -2,6 +2,8 @@
 
 const path = require('path');
 
+const bindMiddleware = require('./lib/coverage/middleware');
+
 module.exports = {
   entry: './example/renderer/main.js',
   output: {
@@ -69,4 +71,7 @@ module.exports = {
     ],
   },
   devtool: '#eval-source-map',
+  devServer: {
+    before: (app, server) => bindMiddleware(app, server),
+  }
 };

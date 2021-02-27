@@ -1,6 +1,6 @@
 {
   "name": "electrom",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Electrom is a resource management solution for Electron applications, which is convenient for performance management and friendly debugging of multiple windows",
   "keywords": [
     "electron",
@@ -12,6 +12,7 @@
   },
   "files": [
     "lib/**/*.js",
+    "lib/coverage/reporter.html",
     "src/**/*.jsx",
     "src/**/*.less"
   ],
@@ -22,6 +23,7 @@
   },
   "dependencies": {
     "commander": "^6.2.0",
+    "mkdirp": "0.5.1",
     "runscript": "^1.5.0"
   },
   "devDependencies": {
@@ -65,6 +67,7 @@
   },
   "scripts": {
     "dev": "concurrently 'NODE_ENV=development webpack-dev-server' 'electron ./example/index.js'",
+    "dev:web": "NODE_ENV=development webpack-dev-server",
     "test": "nyc --reporter=lcov --reporter=text mocha",
     "lint": "eslint . --fix",
     "contributor": "git-contributor"
