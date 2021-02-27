@@ -72,6 +72,6 @@ module.exports = {
   },
   devtool: '#eval-source-map',
   devServer: {
-    before: app => bindMiddleware(app),
+    before: (app, server) => bindMiddleware(app, server),
   }
 };
