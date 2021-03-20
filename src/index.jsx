@@ -25,6 +25,16 @@ const useViewModel = (props) => {
     {
       title: 'type',
       dataIndex: 'type',
+      filters: Array.from(new Set(data.map(item => item.type))).map(item => {
+        return {
+          text: item,
+          value: item,
+        };
+      }),
+      defaultFilteredValue: [],
+      onFilter: (value, record) => record.type === value,
+      ellipsis: true,
+      filterMultiple: false,
     },
     {
       title: 'creationTime',
@@ -132,6 +142,19 @@ const StatusBoard = (props) => {
         size="small"
         tableLayout="fixed"
       />
+      <footer>
+        <a
+          onClick={e => {
+            e.preventDefault();
+            if (props.shell) {
+              props.shell.openExternal(e.target.href);
+            }
+          }}
+          href="https://github.com/xudafeng/electrom"
+        >
+            Electrom
+        </a>
+      </footer>
     </div>
   );
 }
@@ -140,6 +163,7 @@ StatusBoard.PropTypes = {
   eventDataChannelName: PropTypes.string.isRequired,
   eventActionChannelName: PropTypes.string.isRequired,
   ipcRenderer: PropTypes.object,
+  shell: PropTypes.object,
 };
 
 export default StatusBoard;
