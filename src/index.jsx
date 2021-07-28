@@ -39,19 +39,19 @@ const useViewModel = (props) => {
     {
       title: 'creationTime',
       dataIndex: 'creationTime',
-      sorter: (a, b) => a - b,
+      sorter: (a, b) => a.creationTime - b.creationTime,
       render: (creationTime) => moment(creationTime).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       title: 'cpu',
       dataIndex: 'cpu',
-      sorter: (a, b) => a - b,
+      sorter: (a, b) => a.cpu.percentCPUUsage - b.cpu.percentCPUUsage,
       render: (cpu) => `${(cpu.percentCPUUsage * 100).toFixed(2)}%`,
     },
     {
       title: 'memory',
       dataIndex: 'memory',
-      sorter: (a, b) => a - b,
+      sorter: (a, b) => a.memory.workingSetSize - b.memory.workingSetSize,
       render: (memory) => filesize(memory.workingSetSize * 1024),
     },
     {
@@ -119,7 +119,7 @@ const useViewModel = (props) => {
       ipcRenderer.removeListener(eventDataChannelName, updateAppMetrics);
     };
   }, []);
-  
+
   return {
     state: {
       columns,
@@ -141,6 +141,7 @@ const StatusBoard = (props) => {
         pagination={false}
         size="small"
         tableLayout="fixed"
+        rowKey={'pid'}
       />
       <footer>
         <a
@@ -152,7 +153,7 @@ const StatusBoard = (props) => {
           }}
           href="https://github.com/xudafeng/electrom"
         >
-            Electrom
+          Electrom
         </a>
       </footer>
     </div>
