@@ -1,6 +1,6 @@
 {
   "name": "electrom",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Electrom is a resource management solution for Electron applications, which is convenient for performance management and friendly debugging of multiple windows",
   "keywords": [
     "electron",

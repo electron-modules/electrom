@@ -3,6 +3,10 @@ import { Table, Button, Popover } from 'antd';
 import filesize from 'filesize';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import {
+  EVENT_DATA_CHANNEL_NAME,
+  EVENT_ACTION_CHANNEL_NAME,
+} from '../lib/monitor/constants';
 
 import styles from './index.module.less';
 
@@ -159,6 +163,11 @@ const StatusBoard = (props) => {
     </div>
   );
 }
+
+StatusBoard.defaultProps = {
+  eventDataChannelName: EVENT_DATA_CHANNEL_NAME,
+  eventActionChannelName: EVENT_ACTION_CHANNEL_NAME,
+};
 
 StatusBoard.PropTypes = {
   eventDataChannelName: PropTypes.string.isRequired,
