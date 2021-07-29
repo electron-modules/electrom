@@ -27,7 +27,7 @@
 $ npm i electrom --save-dev
 ```
 
-## Usage
+## CLI Usage
 
 ```bash
 $ npx electrom 100
@@ -47,9 +47,29 @@ electrom(100)
   }
 ```
 
+## Status Board
+
+```javascript
+import React from 'react';
+import StatusBoard from 'electrom/src/index';
+import { ipcRenderer, shell } from 'electron';
+
+function() {
+  return (
+    <StatusBoard
+      eventDataChannelName="electrom:monitor:data"
+      eventActionChannelName="electrom:monitor:action"
+      ipcRenderer={ipcRenderer}
+      shell={shell}
+    />
+  );
+}
+```
+
 ## TODO
 
 - [ ] usage summary
+- [ ] heapdump
 
 <!-- GITCONTRIBUTOR_START -->
 
