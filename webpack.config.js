@@ -11,6 +11,9 @@ module.exports = {
     publicPath: '/dist',
     filename: 'example.js',
   },
+  resolve: {
+    extensions: [ '*', '.js', '.jsx', '.json', '.less' ],
+  },
   module: {
     rules: [
       {
@@ -73,5 +76,5 @@ module.exports = {
   devtool: '#eval-source-map',
   devServer: {
     before: (app, server) => bindMiddleware(app, server),
-  }
+  },
 };

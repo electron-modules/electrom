@@ -54,7 +54,7 @@ electrom(100)
 
 ```javascript
 import React from 'react';
-import StatusBoard from 'electrom/src/index';
+import StatusBoard from 'electrom/src/StatusBoard';
 import { ipcRenderer, shell } from 'electron';
 
 function() {
@@ -69,9 +69,21 @@ function() {
 }
 ```
 
+## Perf Board
+
+```javascript
+import React from 'react';
+import PerfBoard from 'electrom/src/PerfBoard';
+
+function() {
+  return (
+    <PerfBoard />
+  );
+}
+```
+
 ## TODO
 
-- [ ] usage summary
 - [ ] heapdump
 
 <!-- GITCONTRIBUTOR_START -->

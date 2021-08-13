@@ -8,7 +8,7 @@ import {
   EVENT_ACTION_CHANNEL_NAME,
 } from '../lib/monitor/constants';
 
-import styles from './index.module.less';
+import styles from './StatusBoard.module.less';
 
 const useViewModel = (props) => {
   const { ipcRenderer } = props;
