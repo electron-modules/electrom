@@ -1,6 +1,6 @@
 {
   "name": "electrom",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "Electrom is a resource management solution for Electron applications, which is convenient for performance management and friendly debugging of multiple windows",
   "keywords": [
     "electron",
@@ -56,7 +56,7 @@
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
     "mocha": "*",
-    "monitor.js": "^2.0.0",
+    "monitor.js": "*",
     "nyc": "*",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
