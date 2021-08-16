@@ -54,10 +54,16 @@ const useViewModel = (props) => {
       render: (cpu) => `${round(cpu.percentCPUUsage * 10, 2)}%`,
     },
     {
-      title: 'memory',
+      title: 'working',
       dataIndex: 'memory',
       sorter: (a, b) => a.memory.workingSetSize - b.memory.workingSetSize,
       render: (memory) => filesize(memory.workingSetSize * 1024),
+    },
+    {
+      title: 'peak',
+      dataIndex: 'memory',
+      sorter: (a, b) => a.memory.peakWorkingSetSize - b.memory.peakWorkingSetSize,
+      render: (memory) => filesize(memory.peakWorkingSetSize * 1024),
     },
     {
       title: 'webContent',
