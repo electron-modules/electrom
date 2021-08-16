@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Popover } from 'antd';
 import filesize from 'filesize';
 import moment from 'moment';
+import { round } from 'lodash';
 import PropTypes from 'prop-types';
 import {
   EVENT_DATA_CHANNEL_NAME,
@@ -50,7 +51,7 @@ const useViewModel = (props) => {
       title: 'cpu',
       dataIndex: 'cpu',
       sorter: (a, b) => a.cpu.percentCPUUsage - b.cpu.percentCPUUsage,
-      render: (cpu) => `${(cpu.percentCPUUsage * 100).toFixed(2)}%`,
+      render: (cpu) => `${round(cpu.percentCPUUsage * 10, 2)}%`,
     },
     {
       title: 'memory',
