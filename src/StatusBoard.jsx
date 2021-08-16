@@ -63,17 +63,19 @@ const useViewModel = (props) => {
       dataIndex: 'webContentInfo',
       render: webContentInfo => {
         if (!webContentInfo) return null;
-        const urlObj = new URL(webContentInfo.url);
         const extraInfo = [];
-        if (urlObj.protocol) {
-          extraInfo.push(urlObj.protocol);
-        }
-        if (urlObj.hash) {
-          extraInfo.push(urlObj.hash);
-        }
-        if (urlObj.search) {
-          extraInfo.push(urlObj.search);
-        }
+        try {
+          const urlObj = new URL(webContentInfo.url);
+          if (urlObj.protocol) {
+            extraInfo.push(urlObj.protocol);
+          }
+          if (urlObj.hash) {
+            extraInfo.push(urlObj.hash);
+          }
+          if (urlObj.search) {
+            extraInfo.push(urlObj.search);
+          }
+        } catch (_) {}
         return (
           <Popover content={(
             <div>
