@@ -53,4 +53,17 @@ app.on('ready', () => {
   win.once('ready-to-show', () => {
     win.show();
   });
+
+  PerfTracing({
+    dumpTargetDir: path.join(process.cwd(), '.electrom'),
+    partitionThreshold: 30E3,
+    memoryDumpConfig: {
+      triggers: [
+        {
+          mode: 'light',
+          periodic_interval_ms: 10E3,
+        },
+      ],
+    },
+  });
 });
