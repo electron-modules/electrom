@@ -24,6 +24,7 @@
   "dependencies": {
     "commander": "^6.2.0",
     "debug": "4.1.1",
+    "moment": "2.24.0",
     "mkdirp": "0.5.1",
     "runscript": "^1.5.0"
   },
