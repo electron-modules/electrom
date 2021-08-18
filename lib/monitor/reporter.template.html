@@ -24,12 +24,12 @@
 <script>
 // insert-global-data
 const container = document.querySelector('#container');
-const renderChart = ({ pid }) => {
+const renderChart = ({ pid, type }) => {
   const id = `chart_${pid}`;
   const elem = document.createElement('div');
   elem.id = id;
   const title = document.createElement('h1');
-  title.innerHTML = `PID: ${pid}`;
+  title.innerHTML = `PID: ${pid}(${type})`;
   container.appendChild(title);
   container.appendChild(elem);
   const chartData = data.originData.map(({ data, key }) => {
