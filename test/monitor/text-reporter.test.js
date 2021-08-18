@@ -11,17 +11,26 @@ describe('test/monitor/text-reporter.test.js', () => {
   describe('pickDataFromDir()', () => {
     it('should be ok', () => {
       const dir = path.join(__dirname, '..', 'fixture', 'metrics');
-      res = Electrom.Monitor.TextReporter.pickDataFromDir(dir);
-      assert.equal(res.length, 2);
+      res = Electrom.Monitor.Reporter.pickDataFromDir(dir);
+      assert.equal(res.length, 21);
     });
   });
 
-  describe('genReporter()', () => {
+  describe('genTextReporter()', () => {
     it('should be ok', () => {
       const dir = path.join(__dirname, '..', 'fixture', 'metrics');
-      const data = Electrom.Monitor.TextReporter.pickDataFromDir(dir);
-      res = Electrom.Monitor.TextReporter.genReporter(data);
+      const data = Electrom.Monitor.Reporter.pickDataFromDir(dir);
+      res = Electrom.Monitor.Reporter.genTextReporter(data);
       assert(res.str);
+    });
+  });
+
+  describe('genHtmlReporter()', () => {
+    it('should be ok', () => {
+      const dir = path.join(__dirname, '..', 'fixture', 'metrics');
+      const data = Electrom.Monitor.Reporter.pickDataFromDir(dir);
+      res = Electrom.Monitor.Reporter.renderHtmlReporter(data);
+      assert(res);
     });
   });
 });

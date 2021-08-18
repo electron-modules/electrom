@@ -13,6 +13,7 @@
   "files": [
     "lib/**/*.js",
     "lib/coverage/reporter.html",
+    "lib/monitor/reporter.template.html",
     "src/**/*.jsx",
     "src/**/*.less"
   ],
