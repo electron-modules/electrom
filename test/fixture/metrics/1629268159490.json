@@ -1,64 +1,132 @@
 [
   {
     "cpu": {
-      "percentCPUUsage": 0.0008975214354428317,
+      "percentCPUUsage": 0.011827367228055033,
+      "idleWakeupsPerSecond": 1
+    },
+    "pid": 53938,
+    "type": "Tab",
+    "creationTime": 1629267999557.374,
+    "memory": {
+      "workingSetSize": 161148,
+      "peakWorkingSetSize": 176456
+    },
+    "sandboxed": false
+  },
+  {
+    "cpu": {
+      "percentCPUUsage": 0.36609923850798515,
+      "idleWakeupsPerSecond": 5
+    },
+    "pid": 53922,
+    "type": "Tab",
+    "creationTime": 1629267996074.124,
+    "memory": {
+      "workingSetSize": 421592,
+      "peakWorkingSetSize": 440460
+    },
+    "sandboxed": false,
+    "webContentInfo": {
+      "type": "window",
+      "id": 1,
+      "pid": 53922,
+      "url": "http://foo#/"
+    }
+  },
+  {
+    "cpu": {
+      "percentCPUUsage": 0.0012097355518083748,
       "idleWakeupsPerSecond": 0
     },
-    "pid": 54646,
+    "pid": 53921,
     "type": "Tab",
-    "creationTime": 1629268568143.33,
+    "creationTime": 1629267996069.59,
     "memory": {
-      "workingSetSize": 68448,
-      "peakWorkingSetSize": 68536
+      "workingSetSize": 306244,
+      "peakWorkingSetSize": 435892
+    },
+    "sandboxed": false,
+    "webContentInfo": {
+      "type": "window",
+      "id": 3,
+      "pid": 53921,
+      "url": "http://foo#/mini"
+    }
+  },
+  {
+    "cpu": {
+      "percentCPUUsage": 0.03595546627731186,
+      "idleWakeupsPerSecond": 0
+    },
+    "pid": 53920,
+    "type": "Tab",
+    "creationTime": 1629267995470.844,
+    "memory": {
+      "workingSetSize": 322516,
+      "peakWorkingSetSize": 436136
     },
     "sandboxed": false,
     "webContentInfo": {
       "type": "window",
       "id": 5,
-      "pid": 54646,
+      "pid": 53920,
       "url": "http://foo#/electrom"
     }
   },
   {
     "cpu": {
-      "percentCPUUsage": 0,
-      "idleWakeupsPerSecond": 0
-    },
-    "pid": 54639,
-    "type": "Utility",
-    "creationTime": 1629268567480.773,
-    "name": "Network Service",
-    "memory": {
-      "workingSetSize": 22828,
-      "peakWorkingSetSize": 22884
-    },
-    "sandboxed": false
-  },
-  {
-    "cpu": {
-      "percentCPUUsage": 0,
-      "idleWakeupsPerSecond": 0
-    },
-    "pid": 54637,
-    "type": "GPU",
-    "creationTime": 1629268567286.4,
-    "memory": {
-      "workingSetSize": 45788,
-      "peakWorkingSetSize": 46496
-    },
-    "sandboxed": false
-  },
-  {
-    "cpu": {
-      "percentCPUUsage": 0.0031720854878537603,
+      "percentCPUUsage": 0.005048894292150019,
       "idleWakeupsPerSecond": 1
     },
-    "pid": 54632,
-    "type": "Browser",
-    "creationTime": 1629268566597.655,
+    "pid": 53915,
+    "type": "Utility",
+    "creationTime": 1629267994956.883,
+    "name": "Network Service",
     "memory": {
-      "workingSetSize": 116292,
-      "peakWorkingSetSize": 135060
+      "workingSetSize": 29160,
+      "peakWorkingSetSize": 29168
+    },
+    "sandboxed": false
+  },
+  {
+    "cpu": {
+      "percentCPUUsage": 0.0004982237241140283,
+      "idleWakeupsPerSecond": 0
+    },
+    "pid": 53939,
+    "type": "Tab",
+    "creationTime": 1629268000249.821,
+    "memory": {
+      "workingSetSize": 37056,
+      "peakWorkingSetSize": 37120
+    },
+    "sandboxed": false
+  },
+  {
+    "cpu": {
+      "percentCPUUsage": 0.05391399687740048,
+      "idleWakeupsPerSecond": 3
+    },
+    "pid": 53906,
+    "type": "Browser",
+    "creationTime": 1629267994083.444,
+    "memory": {
+      "workingSetSize": 133400,
+      "peakWorkingSetSize": 152872
+    },
+    "sandboxed": false
+  },
+  {
+    "cpu": {
+      "percentCPUUsage": 0,
+      "idleWakeupsPerSecond": 0
+    },
+    "pid": 53912,
+    "type": "GPU",
+    "creationTime": 1629267994827.013,
+    "memory": {
+      "workingSetSize": 67548,
+      "peakWorkingSetSize": 70968
     },
     "sandboxed": false
   }

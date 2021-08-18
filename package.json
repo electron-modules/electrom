@@ -24,6 +24,8 @@
   "dependencies": {
     "commander": "^6.2.0",
     "debug": "4.1.1",
+    "filesize": "^6.1.0",
+    "lodash": "4.17.15",
     "moment": "2.24.0",
     "mkdirp": "0.5.1",
     "runscript": "^1.5.0"
@@ -51,7 +53,6 @@
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-react": "^7.14.3",
-    "filesize": "^6.1.0",
     "git-contributor": "*",
     "husky": "*",
     "jsx-loader": "^0.13.2",

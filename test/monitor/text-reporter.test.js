@@ -21,7 +21,7 @@ describe('test/monitor/text-reporter.test.js', () => {
       const dir = path.join(__dirname, '..', 'fixture', 'metrics');
       const data = Electrom.Monitor.TextReporter.pickDataFromDir(dir);
       res = Electrom.Monitor.TextReporter.genReporter(data);
-      console.log(res);
+      assert(res.str);
     });
   });
 });
