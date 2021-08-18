@@ -71,7 +71,7 @@
   "scripts": {
     "dev": "concurrently 'NODE_ENV=development webpack-dev-server' 'electron ./example/index.js'",
     "dev:web": "NODE_ENV=development webpack-dev-server",
-    "test": "nyc --reporter=lcov --reporter=text mocha",
+    "test": "nyc --reporter=lcov --reporter=text mocha --recursive",
     "lint": "eslint . --fix",
     "contributor": "git-contributor"
   },
