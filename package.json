@@ -1,6 +1,6 @@
 {
   "name": "electrom",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Electrom is a resource management solution for Electron applications, which is convenient for performance management and friendly debugging of multiple windows",
   "keywords": [
     "electron",
@@ -13,6 +13,7 @@
   "files": [
     "lib/**/*.js",
     "lib/coverage/reporter.html",
+    "lib/monitor/reporter.template.html",
     "src/**/*.jsx",
     "src/**/*.less"
   ],
@@ -23,6 +24,10 @@
   },
   "dependencies": {
     "commander": "^6.2.0",
+    "debug": "4.1.1",
+    "filesize": "^6.1.0",
+    "lodash": "4.17.15",
+    "moment": "2.24.0",
     "mkdirp": "0.5.1",
     "runscript": "^1.5.0"
   },
@@ -49,7 +54,6 @@
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-react": "^7.14.3",
-    "filesize": "^6.1.0",
     "git-contributor": "*",
     "husky": "*",
     "jsx-loader": "^0.13.2",
@@ -69,7 +73,7 @@
   "scripts": {
     "dev": "concurrently 'NODE_ENV=development webpack-dev-server' 'electron ./example/index.js'",
     "dev:web": "NODE_ENV=development webpack-dev-server",
-    "test": "nyc --reporter=lcov --reporter=text mocha",
+    "test": "nyc --reporter=lcov --reporter=text mocha --recursive",
     "lint": "eslint . --fix",
     "contributor": "git-contributor"
   },

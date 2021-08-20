@@ -4,7 +4,7 @@ const url = require('url');
 const path = require('path');
 const WindowManager = require('electron-windows');
 const { app } = require('electron');
-const { Monitor } = require('..');
+const { Monitor, PerfTracing } = require('..');
 
 const monitor = new Monitor({
   interval: 3 * 1000,
@@ -40,14 +40,30 @@ app.on('ready', () => {
         webviewTag: true,
       },
     },
+    openDevTools: true,
   });
   win.loadURL(mainUrl);
-  win.once('ready-to-show', () => {
-    win.show();
+  win.webContents.on('dom-ready', () => {
     monitor.on(EVENT_DATA_CHANNEL_NAME, (data) => {
       win.webContents.send(EVENT_DATA_CHANNEL_NAME, data);
     });
     monitor.bindEventToWindow(win);
     monitor.start();
+  });
+  win.once('ready-to-show', () => {
+    win.show();
+  });
+
+  PerfTracing({
+    dumpTargetDir: path.join(process.cwd(), '.electrom'),
+    partitionThreshold: 30E3,
+    memoryDumpConfig: {
+      triggers: [
+        {
+          mode: 'light',
+          periodic_interval_ms: 10E3,
+        },
+      ],
+    },
   });
 });

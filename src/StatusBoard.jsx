@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Popover } from 'antd';
 import filesize from 'filesize';
 import moment from 'moment';
+import { round } from 'lodash';
 import PropTypes from 'prop-types';
 import {
   EVENT_DATA_CHANNEL_NAME,
@@ -50,30 +51,38 @@ const useViewModel = (props) => {
       title: 'cpu',
       dataIndex: 'cpu',
       sorter: (a, b) => a.cpu.percentCPUUsage - b.cpu.percentCPUUsage,
-      render: (cpu) => `${(cpu.percentCPUUsage * 100).toFixed(2)}%`,
+      render: (cpu) => `${round(cpu.percentCPUUsage * 10, 2)}%`,
     },
     {
-      title: 'memory',
+      title: 'working',
       dataIndex: 'memory',
       sorter: (a, b) => a.memory.workingSetSize - b.memory.workingSetSize,
       render: (memory) => filesize(memory.workingSetSize * 1024),
+    },
+    {
+      title: 'peak',
+      dataIndex: 'memory',
+      sorter: (a, b) => a.memory.peakWorkingSetSize - b.memory.peakWorkingSetSize,
+      render: (memory) => filesize(memory.peakWorkingSetSize * 1024),
     },
     {
       title: 'webContent',
       dataIndex: 'webContentInfo',
       render: webContentInfo => {
         if (!webContentInfo) return null;
-        const urlObj = new URL(webContentInfo.url);
         const extraInfo = [];
-        if (urlObj.protocol) {
-          extraInfo.push(urlObj.protocol);
-        }
-        if (urlObj.hash) {
-          extraInfo.push(urlObj.hash);
-        }
-        if (urlObj.search) {
-          extraInfo.push(urlObj.search);
-        }
+        try {
+          const urlObj = new URL(webContentInfo.url);
+          if (urlObj.protocol) {
+            extraInfo.push(urlObj.protocol);
+          }
+          if (urlObj.hash) {
+            extraInfo.push(urlObj.hash);
+          }
+          if (urlObj.search) {
+            extraInfo.push(urlObj.search);
+          }
+        } catch (_) {}
         return (
           <Popover content={(
             <div>

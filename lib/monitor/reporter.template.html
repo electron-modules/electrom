@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <title>Electrom Monitor Reporter</title>
+  <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g2-3.5.1/dist/g2.min.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+    #container {
+      width: 80%;
+      margin: 0 auto;
+    }
+    #container h1 {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+<script>
+// insert-global-data
+const container = document.querySelector('#container');
+const renderChart = ({ pid, type }) => {
+  const id = `chart_${pid}`;
+  const elem = document.createElement('div');
+  elem.id = id;
+  const title = document.createElement('h1');
+  title.innerHTML = `PID: ${pid}(${type})`;
+  container.appendChild(title);
+  container.appendChild(elem);
+  const chartData = data.originData.map(({ data, key }) => {
+    const current = data.find(item => item.pid === pid);
+    return {
+      timeStamp: parseInt(key, 10),
+      percentCPUUsage: current.cpu.percentCPUUsage,
+      workingSetSize: current.memory.workingSetSize,
+      peakWorkingSetSize: current.memory.peakWorkingSetSize,
+    };
+  });
+  const chart = new window.G2.Chart({
+    id,
+    forceFit: true,
+    height: 360,
+    padding: 80
+  });
+  chart.source(chartData);
+  chart.legend({
+    position: 'top'
+  });
+  chart.scale('timeStamp', {
+    alias: 'time',
+    type: 'time',
+    mask: 'HH:mm:ss',
+    nice: false,
+    tickCount: data.pickCount,
+  });
+  chart.scale('percentCPUUsage', {
+    alias: 'cpu',
+    formatter: (val) => {
+      return `${Math.round(val * 10).toFixed(2)}%`;
+    }
+  });
+  chart.scale('workingSetSize', {
+    alias: 'memory',
+    formatter: val => {
+      return `${(val / 1024).toFixed(2)}MB`;
+    }
+  });
+  chart.scale('peakWorkingSetSize', {
+    alias: 'peakWorkingSetSize',
+    formatter: val => {
+      return `${(val / 1024).toFixed(2)}MB`;
+    }
+  });
+  chart.line().position('timeStamp*percentCPUUsage').size(3);
+  chart.line().position('timeStamp*workingSetSize').color('#E47668').size(3);
+  // chart.line().position('timeStamp*peakWorkingSetSize').color('red').size(3);
+  chart.render();
+};
+const { data } = window;
+if (data) {
+  data.processDataArray.forEach(renderChart);
+};
+</script>
+</body>
+</html>
