@@ -8,13 +8,13 @@
 [![npm download][download-image]][download-url]
 
 [electron-modules-image]: https://img.shields.io/badge/electron-modules-blue.svg
-[electron-modules-url]: https://github.com/xudafeng/electron-modules
+[electron-modules-url]: https://github.com/electron-modules/electron-modules
 [npm-image]: https://img.shields.io/npm/v/electrom.svg
 [npm-url]: https://npmjs.org/package/electrom
-[travis-image]: https://api.travis-ci.com/xudafeng/electrom.svg?branch=master
-[travis-url]: https://travis-ci.com/github/xudafeng/electrom
-[coveralls-image]: https://img.shields.io/coveralls/xudafeng/electrom.svg
-[coveralls-url]: https://coveralls.io/r/xudafeng/electrom?branch=master
+[travis-image]: https://api.travis-ci.com/electron-modules/electrom.svg?branch=master
+[travis-url]: https://travis-ci.com/github/electron-modules/electrom
+[coveralls-image]: https://img.shields.io/coveralls/electron-modules/electrom.svg
+[coveralls-url]: https://coveralls.io/r/electron-modules/electrom?branch=master
 [node-image]: https://img.shields.io/badge/node.js-%3E=_8-green.svg
 [node-url]: http://nodejs.org/download/
 [download-image]: https://img.shields.io/npm/dm/electrom.svg
@@ -90,11 +90,11 @@ function() {
 
 ## Contributors
 
-|[<img src="https://avatars.githubusercontent.com/u/1011681?v=4" width="100px;"/><br/><sub><b>xudafeng</b></sub>](https://github.com/xudafeng)<br/>|[<img src="https://avatars.githubusercontent.com/u/2226423?v=4" width="100px;"/><br/><sub><b>yantze</b></sub>](https://github.com/yantze)<br/>|
+|[<img src="https://avatars.githubusercontent.com/u/1011681?v=4" width="100px;"/><br/><sub><b>electron-modules</b></sub>](https://github.com/electron-modules)<br/>|[<img src="https://avatars.githubusercontent.com/u/2226423?v=4" width="100px;"/><br/><sub><b>yantze</b></sub>](https://github.com/yantze)<br/>|
 | :---: | :---: |
 
 
-This project follows the git-contributor [spec](https://github.com/xudafeng/git-contributor), auto updated at `Wed Jul 28 2021 14:13:28 GMT+0800`.
+This project follows the git-contributor [spec](https://github.com/electron-modules/git-contributor), auto updated at `Wed Jul 28 2021 14:13:28 GMT+0800`.
 
 <!-- GITCONTRIBUTOR_END -->
 

@@ -164,7 +164,7 @@ const StatusBoard = (props) => {
               props.shell.openExternal(e.target.href);
             }
           }}
-          href="https://github.com/xudafeng/electrom"
+          href="https://github.com/electron-modules/electrom"
         >
           Electrom
         </a>

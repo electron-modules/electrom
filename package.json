@@ -20,7 +20,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/xudafeng/electrom.git"
+    "url": "git://github.com/electron-modules/electrom.git"
   },
   "dependencies": {
     "commander": "^6.2.0",
