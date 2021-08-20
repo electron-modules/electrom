@@ -1,14 +1,11 @@
 # electrom
 
-[![electron modules][electron-modules-image]][electron-modules-url]
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
 [![Test coverage][coveralls-image]][coveralls-url]
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
 
-[electron-modules-image]: https://img.shields.io/badge/electron-modules-blue.svg
-[electron-modules-url]: https://github.com/electron-modules/electron-modules
 [npm-image]: https://img.shields.io/npm/v/electrom.svg
 [npm-url]: https://npmjs.org/package/electrom
 [travis-image]: https://api.travis-ci.com/electron-modules/electrom.svg?branch=master
