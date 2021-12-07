@@ -1,6 +1,6 @@
 {
   "name": "electrom",
-  "version": "0.3.0",
+  "version": "13.0.0",
   "description": "Electrom is a resource management solution for Electron applications, which is convenient for performance management and friendly debugging of multiple windows",
   "keywords": [
     "electron",
@@ -47,8 +47,8 @@
     "classnames": "^2.2.6",
     "concurrently": "^5.3.0",
     "css-loader": "^0.28.8",
-    "electron": "11.3.0",
-    "electron-windows": "^0.4.0",
+    "electron": "13",
+    "electron-windows": "^13.0.0",
     "eslint": "^6.4.0",
     "eslint-config-egg": "^5.1.1",
     "eslint-config-prettier": "^6.3.0",

@@ -9,7 +9,7 @@ import styles from './main.module.less';
 const container = document.querySelector('#app');
 
 const params = new URLSearchParams(location.search);
-const { ipcRenderer, shell } = window.require('electron');
+const { ipcRenderer, shell } = window.electron;
 
 const Main = () => {
   const [display, setDisplay] = useState(true);

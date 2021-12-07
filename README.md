@@ -47,6 +47,25 @@ electrom(100)
   }
 ```
 
+## preload file
+```javascript
+'use strict';
+
+const { contextBridge, ipcRenderer } = require('electron');
+
+contextBridge.exposeInMainWorld(
+  'electron',
+  {
+    ipcRenderer: {
+      send: (channel, ...args) => ipcRenderer.send(channel, ...args),
+      on: (channel, listener) => ipcRenderer.on(channel, listener),
+      removeListener: (channel, listener) => ipcRenderer.removeListener(channel, listener),
+    },
+  }
+)
+```
+Please set this script's path as `webPreferences.preload` of `BrowserWindow`.
+
 ## Status Board
 
 ```javascript
