@@ -38,6 +38,7 @@ app.on('ready', () => {
         nodeIntegration: true,
         webSecurity: true,
         webviewTag: true,
+        preload: path.join(__dirname, 'renderer', 'preload.js'),
       },
     },
     openDevTools: true,

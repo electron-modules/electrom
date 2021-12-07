@@ -47,6 +47,27 @@ electrom(100)
   }
 ```
 
+## preload file
+
+```javascript
+'use strict';
+
+const { contextBridge, ipcRenderer } = require('electron');
+
+contextBridge.exposeInMainWorld(
+  'electron',
+  {
+    ipcRenderer: {
+      send: (channel, ...args) => ipcRenderer.send(channel, ...args),
+      on: (channel, listener) => ipcRenderer.on(channel, listener),
+      removeListener: (channel, listener) => ipcRenderer.removeListener(channel, listener),
+    },
+  }
+)
+```
+
+Please set this script's path as `webPreferences.preload` of `BrowserWindow`.
+
 ## Status Board
 
 ```javascript
@@ -87,11 +108,11 @@ function() {
 
 ## Contributors
 
-|[<img src="https://avatars.githubusercontent.com/u/1011681?v=4" width="100px;"/><br/><sub><b>electron-modules</b></sub>](https://github.com/electron-modules)<br/>|[<img src="https://avatars.githubusercontent.com/u/2226423?v=4" width="100px;"/><br/><sub><b>yantze</b></sub>](https://github.com/yantze)<br/>|
+|[<img src="https://avatars.githubusercontent.com/u/1011681?v=4" width="100px;"/><br/><sub><b>xudafeng</b></sub>](https://github.com/xudafeng)<br/>|[<img src="https://avatars.githubusercontent.com/u/2226423?v=4" width="100px;"/><br/><sub><b>yantze</b></sub>](https://github.com/yantze)<br/>|
 | :---: | :---: |
 
 
-This project follows the git-contributor [spec](https://github.com/electron-modules/git-contributor), auto updated at `Wed Jul 28 2021 14:13:28 GMT+0800`.
+This project follows the git-contributor [spec](https://github.com/xudafeng/git-contributor), auto updated at `Tue Dec 07 2021 21:19:13 GMT+0800`.
 
 <!-- GITCONTRIBUTOR_END -->
 
