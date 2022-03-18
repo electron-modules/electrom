@@ -7,9 +7,6 @@
     "electrom",
     "ps"
   ],
-  "bin": {
-    "electrom": "./bin/electrom.js"
-  },
   "files": [
     "lib/**/*.js",
     "lib/coverage/reporter.html",
