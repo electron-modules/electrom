@@ -18,8 +18,13 @@ module.exports = {
     rules: [
       {
         test: /\.jsx?/,
-        loader: 'babel-loader',
         exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: process.env.NODE_ENV === 'production' ? false : '.cache',
+          },
+        },
       }, {
         test: /\.json$/,
         loader: 'json-loader',
@@ -73,8 +78,9 @@ module.exports = {
       },
     ],
   },
-  devtool: '#eval-source-map',
   devServer: {
-    before: (app, server) => bindMiddleware(app, server),
+    onBeforeSetupMiddleware: (server) => {
+      bindMiddleware(server.app, server);
+    },
   },
 };
