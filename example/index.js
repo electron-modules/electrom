@@ -35,15 +35,12 @@ app.on('ready', () => {
       show: false,
       acceptFirstMouse: true,
       webPreferences: {
-        nodeIntegration: true,
-        webSecurity: true,
-        webviewTag: true,
         preload: path.join(__dirname, 'renderer', 'preload.js'),
       },
     },
-    openDevTools: true,
   });
   win.loadURL(mainUrl);
+  win.webContents.openDevTools({ mode: 'detach' });
   win.webContents.on('dom-ready', () => {
     monitor.on(EVENT_DATA_CHANNEL_NAME, (data) => {
       win.webContents.send(EVENT_DATA_CHANNEL_NAME, data);

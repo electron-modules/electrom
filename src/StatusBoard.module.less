@@ -2,26 +2,15 @@
   padding: 0;
   margin: 0;
 
-  .buttons {
-    display: flex;
-    justify-content: flex-start;
-
-    button {
-      margin-left: 8px;
-
-      &:first-child {
-        margin-left: 0;
-      }
-    }
-  }
-
-  :global {
-    footer {
-      position: fixed;
-      bottom: 0;
-      right: 0;
+  :global(.ant-table) {
+    table {
       font-size: 12px;
-      padding: 4px;
     }
   }
+
+  :global(.ant-table-tbody .ant-table-cell) {
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+  }
+
 }
