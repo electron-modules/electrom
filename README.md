@@ -23,14 +23,14 @@
 
 ## Installment
 
-```bash
-$ npm i electrom --save-dev
+```shell
+npm i electrom --save-dev
 ```
 
-## CLI Usage
-
-```bash
-$ npx electrom 100
+## Usage
+```shell
+npm run dev:web
+npm run dev
 ```
 
 ## APIs
@@ -38,7 +38,7 @@ $ npx electrom 100
 ```javascript
 const electrom = require('electrom');
 
-electrom(100)
+electrom()
   .then(data => {
     console.log(data);
   })

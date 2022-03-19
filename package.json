@@ -68,7 +68,8 @@
     "webpack-dev-server": "^3.9.0"
   },
   "scripts": {
-    "dev": "concurrently 'NODE_ENV=development webpack-dev-server' 'electron ./example/index.js'",
+    "build": "webpack",
+    "dev": "concurrently 'NODE_ENV=development webpack-dev-server' 'electron ./example/index.js --disable-gpu'",
     "dev:web": "NODE_ENV=development webpack-dev-server",
     "test": "nyc --reporter=lcov --reporter=text mocha --recursive",
     "lint": "eslint . --fix",
