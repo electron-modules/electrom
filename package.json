@@ -20,7 +20,6 @@
     "url": "git://github.com/electron-modules/electrom.git"
   },
   "dependencies": {
-    "commander": "^6.2.0",
     "debug": "4.1.1",
     "filesize": "^6.1.0",
     "lodash": "4.17.15",
@@ -53,19 +52,18 @@
     "eslint-plugin-react": "^7.14.3",
     "git-contributor": "*",
     "husky": "*",
-    "jsx-loader": "^0.13.2",
-    "less": "^2.7.3",
-    "less-loader": "^4.0.5",
+    "less": "3.11.3",
+    "less-loader": "^6.2.0",
     "mocha": "*",
     "monitor.js": "*",
     "nyc": "*",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "style-loader": "^0.19.1",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.9.0"
+    "style-loader": "^1.1.2",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.0",
+    "webpack-dev-server": "^4.7.4"
   },
   "scripts": {
     "build": "webpack",
