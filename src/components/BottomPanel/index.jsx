@@ -17,7 +17,6 @@ export const BottomPanel = ({ processInfo, ipcRenderer, eventActionChannelName }
     ipcRenderer.send(eventActionChannelName, 'killProcess', item);
   };
 
-
   return <>
     <div className={style.bottom_info}>
       <Tabs defaultActiveKey="1">
