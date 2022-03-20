@@ -12,4 +12,4 @@ contextBridge.exposeInMainWorld(
     },
     shell,
   }
-)
+);
