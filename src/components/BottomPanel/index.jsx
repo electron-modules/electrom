@@ -20,11 +20,11 @@ export const BottomPanel = ({ processInfo, ipcRenderer, eventActionChannelName }
   return <>
     <div className={style.bottom_info}>
       <Tabs defaultActiveKey="1">
-        <Tabs.TabPane tab="进程详情" key="1">
+        <Tabs.TabPane tab="Process" key="Process">
           <ProcessDetail processInfo={processInfo} killProcess={killProcess} />
         </Tabs.TabPane>
         {processInfo.webContentInfo && (
-          <Tabs.TabPane tab="WebContents" key="2">
+          <Tabs.TabPane tab="WebContents" key="WebContents">
             <WebContentsDetail processInfo={processInfo} openDevTools={openDevTools} />
           </Tabs.TabPane>
         )}

@@ -1,4 +1,4 @@
-# copy from https://github.com/microsoft/vscode/blob/6358042bbcd72bca2c3c2a667b74fd3a8a7172a2/src/vs/base/node/ps.sh
+# from https://github.com/microsoft/vscode/blob/master/src/vs/base/node/ps.sh
 
 #!/bin/sh
 PAGESIZE=`getconf PAGESIZE`;

@@ -24,10 +24,10 @@ module.exports = {
     'array-callback-return': 0,
     'no-bitwise': 0,
     'no-self-compare': 0,
-    'one-var': 0
+    'one-var': 0,
   },
-  globals:{
+  globals: {
     window: true,
     document: true,
-  }
+  },
 };
