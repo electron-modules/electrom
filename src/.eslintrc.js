@@ -1,6 +1,5 @@
 module.exports = {
   extends: 'eslint-config-airbnb',
-  parser: '@babel/eslint-parser',
   env: {
     browser: true,
     es6: true,
@@ -13,12 +12,8 @@ module.exports = {
     ecmaFeatures: {
       jsx: true,
     },
-    babelOptions: {
-      presets: ['@babel/preset-react'],
-    },
   },
   plugins: [
-    'babel',
     'react',
     'compat',
     'no-only-tests',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 import 'antd/dist/antd.css';
@@ -28,17 +28,11 @@ const Main = () => {
       >
         <PerfBoard />
         {display ? (
-          <div
-            className={styles.close}
-            onClick={() => setDisplay(false)}
-          >
+          <div className={styles.close} onClick={() => setDisplay(false)}>
             x
           </div>
         ) : (
-          <div
-            className={styles.badge}
-            onClick={() => setDisplay(true)}
-          >
+          <div className={styles.badge} onClick={() => setDisplay(true)}>
             📈
           </div>
         )}

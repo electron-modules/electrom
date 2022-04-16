@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { Timer, FPSBoard, MemoryStats } from 'monitor.js';
 
 const BOARD_WIDTH = 120;
@@ -7,11 +7,11 @@ const TEXT_COLOR = 'rgb(0, 255, 0)';
 const BORDER_COLOR = 'rgb(17, 51, 17)';
 
 const PerfBoard = () => {
-  const [container, setContainer] = useState(null);
+  const containerRef = useRef<HTMLDivElement | null>();
   useEffect(() => {
-    if (!container) return;
+    if (!containerRef.current) return;
     const fpsBoard = new FPSBoard({
-      container,
+      container: containerRef.current,
       alpha: 1,
       width: BOARD_WIDTH,
       textColor: TEXT_COLOR,
@@ -31,7 +31,7 @@ const PerfBoard = () => {
     memoryStats.domElement.style.left = '0px';
     memoryStats.domElement.style.top = `${BOARD_HEIGHT + 2}px`;
 
-    container.appendChild(memoryStats.domElement);
+    containerRef.current.appendChild(memoryStats.domElement);
 
     const timer = new Timer();
     timer.update(() => {
@@ -40,13 +40,11 @@ const PerfBoard = () => {
     });
 
     timer.start();
-  }, [
-    container,
-  ]);
+  }, [containerRef.current]);
 
   return (
     <div
-      ref={setContainer}
+      ref={(ref) => (containerRef.current = ref)}
       style={{
         display: 'flex',
         justifyContent: 'flex-end',

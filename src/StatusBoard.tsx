@@ -1,24 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Table } from 'antd';
 import filesize from 'filesize';
 import { round } from 'lodash';
 import PropTypes from 'prop-types';
 import { BottomPanel } from './components/BottomPanel';
 
-import {
-  EVENT_DATA_CHANNEL_NAME,
-  EVENT_ACTION_CHANNEL_NAME,
-} from '../lib/monitor/constants';
+import { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from '../lib/monitor/constants';
 
 import styles from './StatusBoard.module.less';
+import { ColumnsType } from 'antd/lib/table';
+import { ProcessInfo } from './common/interface';
+
+interface MemoryStats {
+  workingSetSize: number;
+  peakWorkingSetSize: number;
+}
+
+interface CpuStatus {
+  percentCPUUsage: number;
+}
 
 /**
  * 获取进程 cmd 的简易信息
- * @param {string} cmd
- * @param {number} startIndex 是否需要截断
- * @returns string
  */
-const findName = (cmd, startIndex = 0) => {
+const findName = (cmd: string, startIndex = 0) => {
   const index = cmd.indexOf(' -');
   const end = index !== -1 ? index : cmd.length;
   if (startIndex > 0) {
@@ -26,15 +31,12 @@ const findName = (cmd, startIndex = 0) => {
   } else {
     return cmd.substring(0, end);
   }
-}
+};
 
 /**
  * 找出相同的字符串
- * @param {string} str1
- * @param {string} str2
- * @returns number
  */
-const findCommonString = (str1, str2) => {
+const findCommonString = (str1: string, str2: string) => {
   let index = -1;
   const minLen = Math.min(str1.length, str2.length);
   for (let i = 0; i < minLen; i++) {
@@ -45,14 +47,12 @@ const findCommonString = (str1, str2) => {
     }
   }
   return index;
-}
+};
 
 /**
  * 从多个字符串中找到相同字符串
- * @param {string[]} strs
- * @returns number
  */
-const findCommonStringPlus = (strs) => {
+const findCommonStringPlus = (strs: string[]) => {
   if (strs.length < 2) {
     return -1;
   }
@@ -67,30 +67,30 @@ const findCommonStringPlus = (strs) => {
 // 测试共同字符串数量
 const MAX_COMMON_STRING_TEST = 3;
 
-const useViewModel = (props) => {
+const useViewModel = (props: any) => {
   const { ipcRenderer } = props;
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any[]>([]);
   const [processBaseIndex, setProcessBaseIndex] = useState(-1);
 
-  const columns = [
+  const columns: ColumnsType<any> = [
     {
       title: 'Process',
       dataIndex: 'cmd',
-      render: (cmd) => findName(cmd, processBaseIndex),
+      render: (cmd: string) => findName(cmd, processBaseIndex),
       fixed: 'right',
     },
     {
       title: 'type',
       dataIndex: 'type',
       width: '80px',
-      filters: Array.from(new Set(data.map(item => item.type))).map(item => {
+      filters: Array.from(new Set(data.map((item) => item.type))).map((item) => {
         return {
           text: item,
           value: item,
         };
       }),
       defaultFilteredValue: [],
-      onFilter: (value, record) => record.type === value,
+      onFilter: (value: any, record: any) => record.type === value,
       ellipsis: true,
       filterMultiple: false,
       fixed: 'right',
@@ -98,32 +98,32 @@ const useViewModel = (props) => {
     {
       title: 'load',
       dataIndex: 'load',
-      sorter: (a, b) => a - b,
-      render: (load) => load,
+      sorter: (a: number, b: number) => a - b,
+      render: (load: number) => load,
       width: '60px',
       fixed: 'right',
     },
     {
       title: 'CPU(%)',
       dataIndex: 'cpu',
-      sorter: (a, b) => a.cpu.percentCPUUsage - b.cpu.percentCPUUsage,
-      render: (cpu) => round(cpu.percentCPUUsage * 10, 2),
+      sorter: (a: { cpu: CpuStatus }, b: { cpu: CpuStatus }) => a.cpu.percentCPUUsage - b.cpu.percentCPUUsage,
+      render: (cpu: CpuStatus) => round(cpu.percentCPUUsage * 10, 2),
       width: '80px',
       fixed: 'right',
     },
     {
       title: 'working',
       dataIndex: 'memory',
-      sorter: (a, b) => a.memory.workingSetSize - b.memory.workingSetSize,
-      render: (memory) => filesize(memory.workingSetSize * 1024),
+      sorter: (a: { memory: MemoryStats }, b: { memory: MemoryStats }) => a.memory.workingSetSize - b.memory.workingSetSize,
+      render: (memory: MemoryStats) => filesize(memory.workingSetSize * 1024),
       width: '100px',
       fixed: 'right',
     },
     {
       title: 'peak',
       dataIndex: 'memory',
-      sorter: (a, b) => a.memory.peakWorkingSetSize - b.memory.peakWorkingSetSize,
-      render: (memory) => filesize(memory.peakWorkingSetSize * 1024),
+      sorter: (a: { memory: MemoryStats }, b: { memory: MemoryStats }) => a.memory.peakWorkingSetSize - b.memory.peakWorkingSetSize,
+      render: (memory: MemoryStats) => filesize(memory.peakWorkingSetSize * 1024),
       width: '100px',
       fixed: 'right',
     },
@@ -135,10 +135,10 @@ const useViewModel = (props) => {
     },
   ];
 
-  const updateAppMetrics = (_, appMetrics) => {
+  const updateAppMetrics = (_: any, appMetrics: any[]) => {
     const list = Array.isArray(appMetrics) ? appMetrics : [];
     if (list.length > MAX_COMMON_STRING_TEST) {
-      setProcessBaseIndex(findCommonStringPlus(list.map(item => item.cmd)));
+      setProcessBaseIndex(findCommonStringPlus(list.map((item) => item.cmd)));
     }
 
     setData(list);
@@ -151,8 +151,7 @@ const useViewModel = (props) => {
     };
   }, []);
 
-  useEffect(() => {
-  }, [data]);
+  useEffect(() => {}, [data]);
 
   return {
     state: {
@@ -162,10 +161,12 @@ const useViewModel = (props) => {
   };
 };
 
-const StatusBoard = (props) => {
+const StatusBoard = (props: any) => {
   const vm = useViewModel(props);
-  const { state: { columns, data } } = vm;
-  const [selectedProcess, setSelectedProcess] = useState(null);
+  const {
+    state: { columns, data },
+  } = vm;
+  const [selectedProcess, setSelectedProcess] = useState<ProcessInfo>();
 
   return (
     <div className={styles.wrapper}>
@@ -186,7 +187,7 @@ const StatusBoard = (props) => {
       <BottomPanel processInfo={selectedProcess} ipcRenderer={props.ipcRenderer} eventActionChannelName={props.eventActionChannelName} />
     </div>
   );
-}
+};
 
 StatusBoard.defaultProps = {
   eventDataChannelName: EVENT_DATA_CHANNEL_NAME,
