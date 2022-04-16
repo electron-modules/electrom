@@ -2,29 +2,43 @@ import { pick } from 'lodash';
 import { join } from 'path';
 import { promises as fs } from 'fs';
 import EventEmitter from 'events';
-import { app, webContents } from 'electron';
+import { app, BrowserWindow, webContents } from 'electron';
 
-import Reporter from './reporter';
+export * from './reporter';
 import { listProcesses } from './ps';
 import { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from './constants';
 
+interface MonitorOptions {
+  threshold?: number;
+  dumpDir?: string | null;
+  dumpThreshold?: number;
+}
+
 export class Monitor extends EventEmitter {
-  constructor(options = {}) {
+  options: MonitorOptions;
+
+  _timer?: NodeJS.Timeout;
+  _latestDumpTimeStamp?: number;
+
+  constructor(options: MonitorOptions = {}) {
     super();
-    this.options = Object.assign({
-      threshold: 5E3,
-      dumpDir: null,
-      dumpThreshold: 10E3,
-    }, options);
+    this.options = Object.assign(
+      {
+        threshold: 5e3,
+        dumpDir: null,
+        dumpThreshold: 10e3,
+      },
+      options
+    );
   }
 
-  stop () {
+  stop() {
     if (this._timer) {
       clearInterval(this._timer);
     }
   }
 
-  start () {
+  start() {
     this.stop();
     this._timer = setInterval(() => this.refreshData(), this.options.threshold);
 
@@ -35,37 +49,38 @@ export class Monitor extends EventEmitter {
   /**
    * 发送新的数据到前端
    */
-  async refreshData () {
+  async refreshData() {
     const data = await this.getAppMetrics();
     this.dump(data);
     this.emit(EVENT_DATA_CHANNEL_NAME, data);
   }
 
-  async dump (data) {
+  async dump(data: any) {
     const { dumpDir, dumpThreshold } = this.options;
     if (!dumpDir) return;
     const now = Date.now();
-    if (this._latestDumpTimeStamp && (now - this._latestDumpTimeStamp < dumpThreshold)) {
+    if (this._latestDumpTimeStamp && dumpThreshold && now - this._latestDumpTimeStamp < dumpThreshold) {
       return;
     }
+
     this._latestDumpTimeStamp = now;
     const fileName = join(dumpDir, `${now}.json`);
     await fs.writeFile(fileName, JSON.stringify(data), 'utf8');
   }
 
-  setOptions (options = {}) {
+  setOptions(options = {}) {
     this.options = Object.assign(this.options, options);
     if (this.options.dumpDir) {
       this.start();
     }
   }
 
-  async getAppMetrics () {
+  async getAppMetrics() {
     const rootPid = process.pid;
     const processMap = await listProcesses(rootPid);
 
     const allWebContents = webContents.getAllWebContents();
-    const webContentInfos = allWebContents.map(webContentInfo => {
+    const webContentInfos = allWebContents.map((webContentInfo) => {
       return {
         type: webContentInfo.getType(),
         id: webContentInfo.id,
@@ -74,9 +89,9 @@ export class Monitor extends EventEmitter {
       };
     });
 
-    return app.getAppMetrics().map(appMetric => {
+    return app.getAppMetrics().map((appMetric) => {
       const processDetail = pick(processMap.get(appMetric.pid), ['load', 'cmd']);
-      const webContentInfo = webContentInfos.find(webContentInfo => webContentInfo.pid === appMetric.pid);
+      const webContentInfo = webContentInfos.find((webContentInfo) => webContentInfo.pid === appMetric.pid);
 
       return {
         ...appMetric,
@@ -86,7 +101,7 @@ export class Monitor extends EventEmitter {
     });
   }
 
-  bindEventToWindow (win) {
+  bindEventToWindow(win: BrowserWindow) {
     if (!win || !win.webContents) return;
     win.webContents.on('ipc-message', (_, eventName, ...args) => {
       if (eventName === EVENT_ACTION_CHANNEL_NAME) {
@@ -104,8 +119,3 @@ export class Monitor extends EventEmitter {
     });
   }
 }
-
-Monitor.Reporter = Reporter;
-
-Monitor.EVENT_DATA_CHANNEL_NAME = EVENT_DATA_CHANNEL_NAME;
-Monitor.EVENT_ACTION_CHANNEL_NAME = EVENT_ACTION_CHANNEL_NAME;

@@ -1,17 +1,12 @@
-'use strict';
-
 import url from 'url';
 import path from 'path';
 import WindowManager from 'electron-windows';
 import { app } from 'electron';
 import { Monitor } from '../lib/monitor';
-import { PerfTracing } from './perf/tracing';
+import { PerfTracing } from '../lib/perf/tracing';
+import { EVENT_ACTION_CHANNEL_NAME, EVENT_DATA_CHANNEL_NAME } from '../lib/monitor/constants';
 
-const monitor = new Monitor({
-  interval: 3 * 1000,
-});
-
-const { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } = Monitor;
+const monitor = new Monitor();
 
 const mainUrl = url.format({
   pathname: path.join(__dirname, 'renderer', 'index.html'),
