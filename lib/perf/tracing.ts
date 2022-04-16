@@ -1,13 +1,11 @@
-'use strict';
-
-const path = require('path');
-const moment = require('moment');
-const { contentTracing } = require('electron');
+import { join } from 'path';
+import moment from 'moment';
+import { contentTracing } from 'electron';
 
 const debug = require('debug')('perf-tracing');
 
 const BUFFER_SIZE = 1024 * 300;
-const PARTITION_THRESHOLD = 10E3;
+const PARTITION_THRESHOLD = 10e3;
 
 // https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/memory-infra/memory_infra_startup_tracing.md#the-advanced-way
 // https://docs.google.com/document/d/1b5BSBEd1oB-3zj_CBAQWiQZ0cmI0HmjmXG-5iNveLqw
@@ -27,21 +25,18 @@ const memoryDumpDefaultConfig = {
     {
       mode: 'light',
       periodic_interval_ms: 50,
-    }, {
+    },
+    {
       mode: 'detailed',
-      periodic_interval_ms: 1E3,
+      periodic_interval_ms: 1e3,
     },
   ],
 };
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const dump = async ({
-  memoryDumpConfig: memory_dump_config,
-  partitionThreshold,
-  dumpTargetDir,
-}) => {
-  const dumpTargetDirFile = path.join(dumpTargetDir, `${moment().format('YYYY-MM-DD HH:mm:ss.SSS')}.json`);
+const dump = async ({ memoryDumpConfig: memory_dump_config, partitionThreshold, dumpTargetDir }: any) => {
+  const dumpTargetDirFile = join(dumpTargetDir, `${moment().format('YYYY-MM-DD HH:mm:ss.SSS')}.json`);
   debug('recoding: %s', dumpTargetDirFile);
   await contentTracing.startRecording({
     trace_buffer_size_in_kb: BUFFER_SIZE,
@@ -54,11 +49,17 @@ const dump = async ({
   return await contentTracing.stopRecording(dumpTargetDirFile);
 };
 
+interface PerfTracingOptions {
+  partitionThreshold?: number;
+  memoryDumpConfig?: any;
+  dumpTargetDir?: string;
+}
+
 /**
  * @param {Object} options.memoryDumpConfig
  * @param {Object} options.dumpTargetDir
  */
-const run = (options = {}) => {
+export const PerfTracing = (options: PerfTracingOptions = {}) => {
   const partitionThreshold = options.partitionThreshold || PARTITION_THRESHOLD;
   const memoryDumpConfig = Object.assign(memoryDumpDefaultConfig, options.memoryDumpConfig || {});
   const dumpTargetDir = options.dumpTargetDir || process.cwd();
@@ -69,7 +70,5 @@ const run = (options = {}) => {
   })
     .then()
     .catch(debug)
-    .finally(() => run(options));
+    .finally(() => PerfTracing(options));
 };
-
-module.exports = run;

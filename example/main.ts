@@ -1,22 +1,20 @@
 'use strict';
 
-const url = require('url');
-const path = require('path');
-const WindowManager = require('electron-windows');
-const { app } = require('electron');
-const { Monitor, PerfTracing } = require('..');
+import url from 'url';
+import path from 'path';
+import WindowManager from 'electron-windows';
+import { app } from 'electron';
+import { Monitor } from '../lib/monitor';
+import { PerfTracing } from './perf/tracing';
 
 const monitor = new Monitor({
   interval: 3 * 1000,
 });
 
-const {
-  EVENT_DATA_CHANNEL_NAME,
-  EVENT_ACTION_CHANNEL_NAME,
-} = Monitor;
+const { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } = Monitor;
 
 const mainUrl = url.format({
-  pathname: path.join(__dirname, 'renderer', 'main.html'),
+  pathname: path.join(__dirname, 'renderer', 'index.html'),
   protocol: 'file:',
   query: {
     EVENT_DATA_CHANNEL_NAME,
@@ -42,7 +40,7 @@ app.on('ready', () => {
   win.loadURL(mainUrl);
   win.webContents.openDevTools({ mode: 'detach' });
   win.webContents.on('dom-ready', () => {
-    monitor.on(EVENT_DATA_CHANNEL_NAME, (data) => {
+    monitor.on(EVENT_DATA_CHANNEL_NAME, (data: any) => {
       win.webContents.send(EVENT_DATA_CHANNEL_NAME, data);
     });
     monitor.bindEventToWindow(win);
@@ -54,12 +52,12 @@ app.on('ready', () => {
 
   PerfTracing({
     dumpTargetDir: path.join(process.cwd(), '.electrom'),
-    partitionThreshold: 30E3,
+    partitionThreshold: 30e3,
     memoryDumpConfig: {
       triggers: [
         {
           mode: 'light',
-          periodic_interval_ms: 10E3,
+          periodic_interval_ms: 10e3,
         },
       ],
     },

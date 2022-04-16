@@ -4,14 +4,14 @@ import classnames from 'classnames';
 import 'antd/dist/antd.css';
 import StatusBoard from '../../src/StatusBoard';
 import PerfBoard from '../../src/PerfBoard';
-import styles from './main.module.less';
+import styles from './index.module.less';
 
 const container = document.querySelector('#app');
 
 const params = new URLSearchParams(location.search);
 const { ipcRenderer, shell } = window.electron;
 
-const Main = () => {
+const App = () => {
   const [display, setDisplay] = useState(true);
   return (
     <>
@@ -41,4 +41,4 @@ const Main = () => {
   );
 };
 
-ReactDOM.render(<Main />, container);
+ReactDOM.render(<App />, container);
