@@ -7,7 +7,7 @@ import { ProcessInfo } from 'src/common/interface';
 
 interface BottomPanelProps {
   processInfo?: ProcessInfo;
-  ipcRenderer: any;
+  ipcRenderer: Window['electron']['ipcRenderer'];
   eventActionChannelName: string;
 }
 

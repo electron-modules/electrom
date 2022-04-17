@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import classnames from 'classnames';
 import 'antd/dist/antd.css';
 import StatusBoard from '../../src/StatusBoard';
@@ -16,8 +16,8 @@ const App = () => {
   return (
     <>
       <StatusBoard
-        eventDataChannelName={params.get('EVENT_DATA_CHANNEL_NAME')}
-        eventActionChannelName={params.get('EVENT_ACTION_CHANNEL_NAME')}
+        eventDataChannelName={params.get('EVENT_DATA_CHANNEL_NAME') || ''}
+        eventActionChannelName={params.get('EVENT_ACTION_CHANNEL_NAME') || ''}
         ipcRenderer={ipcRenderer}
         shell={shell}
       />
@@ -41,4 +41,5 @@ const App = () => {
   );
 };
 
-ReactDOM.render(<App />, container);
+const root = createRoot(container!);
+root.render(<App />);

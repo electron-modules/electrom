@@ -2,10 +2,7 @@ import { useState, useEffect } from 'react';
 import { Table } from 'antd';
 import filesize from 'filesize';
 import { round } from 'lodash';
-import PropTypes from 'prop-types';
 import { BottomPanel } from './components/BottomPanel';
-
-import { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from '../lib/monitor/constants';
 
 import styles from './StatusBoard.module.less';
 import { ColumnsType } from 'antd/lib/table';
@@ -57,7 +54,7 @@ const findCommonStringPlus = (strs: string[]) => {
     return -1;
   }
 
-  let indexs = [];
+  const indexs = [];
   for (let i = 1; i < strs.length; i++) {
     indexs.push(findCommonString(strs[i - 1], strs[i]));
   }
@@ -161,7 +158,14 @@ const useViewModel = (props: any) => {
   };
 };
 
-const StatusBoard = (props: any) => {
+interface StatusBoardProps {
+  shell: Window['electron']['shell'];
+  ipcRenderer: Window['electron']['ipcRenderer'];
+  eventActionChannelName: string;
+  eventDataChannelName: string;
+}
+
+export const StatusBoard = (props: StatusBoardProps) => {
   const vm = useViewModel(props);
   const {
     state: { columns, data },
@@ -187,18 +191,6 @@ const StatusBoard = (props: any) => {
       <BottomPanel processInfo={selectedProcess} ipcRenderer={props.ipcRenderer} eventActionChannelName={props.eventActionChannelName} />
     </div>
   );
-};
-
-StatusBoard.defaultProps = {
-  eventDataChannelName: EVENT_DATA_CHANNEL_NAME,
-  eventActionChannelName: EVENT_ACTION_CHANNEL_NAME,
-};
-
-StatusBoard.PropTypes = {
-  eventDataChannelName: PropTypes.string.isRequired,
-  eventActionChannelName: PropTypes.string.isRequired,
-  ipcRenderer: PropTypes.object,
-  shell: PropTypes.object,
 };
 
 export default StatusBoard;
