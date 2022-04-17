@@ -109,4 +109,6 @@ export const renderHtmlReporter = (originData: any[]) => {
   return template.replace(/\/\/\s+insert-global-data/g, `window.data = ${JSON.stringify(data)};`);
 };
 
-export default { genTextReporter, renderHtmlReporter, pickDataFromDir };
+const Reporter = { genTextReporter, renderHtmlReporter, pickDataFromDir };
+
+export default Reporter;

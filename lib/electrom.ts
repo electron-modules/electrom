@@ -1,2 +1,2 @@
 export { PerfTracing } from './perf/tracing';
-export { Monitor } from './monitor';
+export * from './monitor';

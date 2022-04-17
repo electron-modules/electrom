@@ -1,9 +1,7 @@
-'use strict';
+import path from 'path';
+import assert from 'assert';
 
-const path = require('path');
-const assert = require('assert');
-
-const Electrom = require('../..');
+import Reporter from '../../lib/monitor/reporter';
 
 describe('test/monitor/text-reporter.test.js', () => {
   let res;
@@ -11,7 +9,7 @@ describe('test/monitor/text-reporter.test.js', () => {
   describe('pickDataFromDir()', () => {
     it('should be ok', () => {
       const dir = path.join(__dirname, '..', 'fixture', 'metrics');
-      res = Electrom.Monitor.Reporter.pickDataFromDir(dir);
+      res = Reporter.pickDataFromDir(dir);
       assert.equal(res.length, 21);
     });
   });
@@ -19,8 +17,8 @@ describe('test/monitor/text-reporter.test.js', () => {
   describe('genTextReporter()', () => {
     it('should be ok', () => {
       const dir = path.join(__dirname, '..', 'fixture', 'metrics');
-      const data = Electrom.Monitor.Reporter.pickDataFromDir(dir);
-      res = Electrom.Monitor.Reporter.genTextReporter(data);
+      const data = Reporter.pickDataFromDir(dir);
+      res = Reporter.genTextReporter(data);
       assert(res.str);
     });
   });
@@ -28,8 +26,8 @@ describe('test/monitor/text-reporter.test.js', () => {
   describe('genHtmlReporter()', () => {
     it('should be ok', () => {
       const dir = path.join(__dirname, '..', 'fixture', 'metrics');
-      const data = Electrom.Monitor.Reporter.pickDataFromDir(dir);
-      res = Electrom.Monitor.Reporter.renderHtmlReporter(data);
+      const data = Reporter.pickDataFromDir(dir);
+      res = Reporter.renderHtmlReporter(data);
       assert(res);
     });
   });

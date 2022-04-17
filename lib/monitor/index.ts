@@ -17,7 +17,8 @@ interface MonitorOptions {
 export class Monitor extends EventEmitter {
   options: MonitorOptions;
 
-  _timer?: NodeJS.Timeout;
+  _timer?: ReturnType<typeof setTimeout>;
+
   _latestDumpTimeStamp?: number;
 
   constructor(options: MonitorOptions = {}) {
@@ -28,7 +29,7 @@ export class Monitor extends EventEmitter {
         dumpDir: null,
         dumpThreshold: 10e3,
       },
-      options
+      options,
     );
   }
 
@@ -40,6 +41,7 @@ export class Monitor extends EventEmitter {
 
   start() {
     this.stop();
+
     this._timer = setInterval(() => this.refreshData(), this.options.threshold);
 
     // 前端页面更快的更新到数据

@@ -7,7 +7,7 @@
     "dev": "concurrently npm:dev:*",
     "dev:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only ./example/main.ts",
     "dev:web": "cross-env NODE_ENV=development webpack-dev-server",
-    "test": "nyc --reporter=lcov --reporter=text mocha --recursive",
+    "test": "jest",
     "lint": "eslint . --fix",
     "contributor": "git-contributor"
   },
@@ -36,7 +36,9 @@
   },
   "devDependencies": {
     "@applint/spec": "^1.2.0",
+    "@types/jest": "^27.4.1",
     "@types/lodash": "^4.14.181",
+    "@types/mocha": "^9.1.0",
     "@types/react": "^18.0.5",
     "@types/react-dom": "^18.0.1",
     "@typescript-eslint/parser": "^5.19.0",
@@ -53,6 +55,7 @@
     "eslint-config-erb": "^4.0.0-alpha.0",
     "eslint-config-prettier": "^6.3.0",
     "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-plugin-jest": "^26.1.4",
     "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-no-only-tests": "^2.6.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -71,6 +74,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "style-loader": "^1.1.2",
+    "ts-jest": "^27.1.4",
     "ts-loader": "^9.2.8",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.3",
@@ -82,6 +86,28 @@
     "hooks": {
       "pre-commit": "npm run lint"
     }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {
+      "\\.(ts|tsx|js|jsx)$": "ts-jest"
+    },
+    "moduleNameMapper": {
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx",
+      "json"
+    ],
+    "moduleDirectories": [
+      "node_modules"
+    ],
+    "testPathIgnorePatterns": [
+      "dist"
+    ]
   },
   "license": "MIT"
 }
