@@ -2,6 +2,7 @@ import url from 'url';
 import path from 'path';
 import WindowManager from 'electron-windows';
 import { app } from 'electron';
+import waitPort from 'wait-port';
 import { Monitor } from '../lib/monitor';
 import { PerfTracing } from '../lib/perf/tracing';
 import { EVENT_ACTION_CHANNEL_NAME, EVENT_DATA_CHANNEL_NAME } from '../lib/monitor/constants';
@@ -17,7 +18,10 @@ const mainUrl = url.format({
   },
 });
 
-app.on('ready', () => {
+app.on('ready', async () => {
+  // wait for the port 8000 to be ready
+  await waitPort({ host: 'localhost', port: 8080 });
+
   const windowManager = new WindowManager();
   const win = windowManager.create({
     name: 'main',
@@ -32,6 +36,7 @@ app.on('ready', () => {
       },
     },
   });
+
   win.loadURL(mainUrl);
   win.webContents.openDevTools({ mode: 'detach' });
   win.webContents.on('dom-ready', () => {
