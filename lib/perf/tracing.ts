@@ -1,4 +1,5 @@
 import { join } from 'path';
+import { promises as fsp } from 'fs';
 import moment from 'moment';
 import { contentTracing } from 'electron';
 
@@ -59,10 +60,12 @@ interface PerfTracingOptions {
  * @param {Object} options.memoryDumpConfig
  * @param {Object} options.dumpTargetDir
  */
-export const PerfTracing = (options: PerfTracingOptions = {}) => {
+export const PerfTracing = async (options: PerfTracingOptions = {}) => {
   const partitionThreshold = options.partitionThreshold || PARTITION_THRESHOLD;
   const memoryDumpConfig = Object.assign(memoryDumpDefaultConfig, options.memoryDumpConfig || {});
   const dumpTargetDir = options.dumpTargetDir || process.cwd();
+  await fsp.access(dumpTargetDir).catch(() => fsp.mkdir(dumpTargetDir));
+
   dump({
     dumpTargetDir,
     partitionThreshold,
