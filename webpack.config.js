@@ -5,26 +5,24 @@ const path = require('path');
 const bindMiddleware = require('./lib/coverage/middleware');
 
 module.exports = {
-  entry: './example/renderer/main',
+  entry: './example/renderer',
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist',
     filename: 'example.js',
   },
   resolve: {
-    extensions: [ '*', '.js', '.jsx', '.json', '.less' ],
+    extensions: ['.ts', '.tsx', '.mjs', '.js', '.jsx', '.json', '.less'],
   },
   module: {
     rules: [
       {
-        test: /\.jsx?/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            cacheDirectory: process.env.NODE_ENV === 'production' ? false : '.cache',
-          },
-        },
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+      }, {
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto',
       }, {
         test: /\.json$/,
         loader: 'json-loader',

@@ -1,23 +1,36 @@
-'use strict';
+import { pick } from 'lodash';
+import { join } from 'path';
+import { promises as fs } from 'fs';
+import EventEmitter from 'events';
+import { app, BrowserWindow, webContents } from 'electron';
 
-const _ = require('lodash');
-const path = require('path');
-const { promises: fs } = require('fs');
-const EventEmitter = require('events');
-const { app, webContents } = require('electron');
+export * from './reporter';
+import { listProcesses } from './ps';
+import { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from './constants';
 
-const Reporter = require('./reporter');
-const { listProcesses } = require('./ps');
-const { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } = require('./constants');
+interface MonitorOptions {
+  threshold?: number;
+  dumpDir?: string | null;
+  dumpThreshold?: number;
+}
 
-class Monitor extends EventEmitter {
-  constructor(options = {}) {
+export class Monitor extends EventEmitter {
+  options: MonitorOptions;
+
+  _timer?: ReturnType<typeof setTimeout>;
+
+  _latestDumpTimeStamp?: number;
+
+  constructor(options: MonitorOptions = {}) {
     super();
-    this.options = Object.assign({
-      threshold: 5E3,
-      dumpDir: null,
-      dumpThreshold: 10E3,
-    }, options);
+    this.options = Object.assign(
+      {
+        threshold: 5e3,
+        dumpDir: null,
+        dumpThreshold: 10e3,
+      },
+      options,
+    );
   }
 
   stop() {
@@ -28,6 +41,7 @@ class Monitor extends EventEmitter {
 
   start() {
     this.stop();
+
     this._timer = setInterval(() => this.refreshData(), this.options.threshold);
 
     // 前端页面更快的更新到数据
@@ -43,15 +57,16 @@ class Monitor extends EventEmitter {
     this.emit(EVENT_DATA_CHANNEL_NAME, data);
   }
 
-  async dump(data) {
+  async dump(data: any) {
     const { dumpDir, dumpThreshold } = this.options;
     if (!dumpDir) return;
     const now = Date.now();
-    if (this._latestDumpTimeStamp && (now - this._latestDumpTimeStamp < dumpThreshold)) {
+    if (this._latestDumpTimeStamp && dumpThreshold && now - this._latestDumpTimeStamp < dumpThreshold) {
       return;
     }
+
     this._latestDumpTimeStamp = now;
-    const fileName = path.join(dumpDir, `${now}.json`);
+    const fileName = join(dumpDir, `${now}.json`);
     await fs.writeFile(fileName, JSON.stringify(data), 'utf8');
   }
 
@@ -67,7 +82,7 @@ class Monitor extends EventEmitter {
     const processMap = await listProcesses(rootPid);
 
     const allWebContents = webContents.getAllWebContents();
-    const webContentInfos = allWebContents.map(webContentInfo => {
+    const webContentInfos = allWebContents.map((webContentInfo) => {
       return {
         type: webContentInfo.getType(),
         id: webContentInfo.id,
@@ -76,9 +91,9 @@ class Monitor extends EventEmitter {
       };
     });
 
-    return app.getAppMetrics().map(appMetric => {
-      const processDetail = _.pick(processMap.get(appMetric.pid), [ 'load', 'cmd' ]);
-      const webContentInfo = webContentInfos.find(webContentInfo => webContentInfo.pid === appMetric.pid);
+    return app.getAppMetrics().map((appMetric) => {
+      const processDetail = pick(processMap.get(appMetric.pid), ['load', 'cmd']);
+      const webContentInfo = webContentInfos.find((webContentInfo) => webContentInfo.pid === appMetric.pid);
 
       return {
         ...appMetric,
@@ -88,7 +103,7 @@ class Monitor extends EventEmitter {
     });
   }
 
-  bindEventToWindow(win) {
+  bindEventToWindow(win: BrowserWindow) {
     if (!win || !win.webContents) return;
     win.webContents.on('ipc-message', (_, eventName, ...args) => {
       if (eventName === EVENT_ACTION_CHANNEL_NAME) {
@@ -106,10 +121,3 @@ class Monitor extends EventEmitter {
     });
   }
 }
-
-Monitor.Reporter = Reporter;
-
-Monitor.EVENT_DATA_CHANNEL_NAME = EVENT_DATA_CHANNEL_NAME;
-Monitor.EVENT_ACTION_CHANNEL_NAME = EVENT_ACTION_CHANNEL_NAME;
-
-module.exports = Monitor;

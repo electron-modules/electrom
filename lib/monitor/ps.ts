@@ -1,19 +1,25 @@
-'use strict';
-
-const path = require('path');
-const { exec } = require('child_process');
+import path from 'path';
+import { exec } from 'child_process';
 
 // modified from https://github.com/microsoft/vscode/blob/master/src/vs/base/node/ps.ts
 
+export interface ProcessItem {
+  cmd: string;
+  pid: number;
+  ppid: number;
+  load: number;
+  mem: number;
+
+  children?: ProcessItem[];
+}
+
 function calculateLinuxCpuUsage() {}
 
-function listProcesses(rootPid) {
-
+export function listProcesses(rootPid: number): Promise<Map<number, ProcessItem>> {
   return new Promise((resolve, reject) => {
+    const processMap = new Map<number, ProcessItem>();
 
-    const processMap = new Map();
-
-    function addToMap(pid, ppid, cmd, load, mem) {
+    function addToMap(pid: number, ppid: number, cmd: string, load: number, mem: number) {
       const item = {
         cmd,
         pid,
@@ -25,8 +31,7 @@ function listProcesses(rootPid) {
     }
 
     if (process.platform === 'win32') {
-
-      const cleanUNCPrefix = (value) => {
+      const cleanUNCPrefix = (value: string): string => {
         if (value.indexOf('\\\\?\\') === 0) {
           return value.substr(4);
         } else if (value.indexOf('\\??\\') === 0) {
@@ -37,34 +42,38 @@ function listProcesses(rootPid) {
           return '"' + value.substr(5);
         }
         return value;
-
       };
 
-      (require('windows-process-tree')).then(windowsProcessTree => {
-        windowsProcessTree.getProcessList(rootPid, (processList) => {
-          windowsProcessTree.getProcessCpuUsage(processList, (completeProcessList) => {
-            completeProcessList.forEach(process => {
-              const commandLine = cleanUNCPrefix(process.commandLine || '');
-              processMap.set(process.pid, {
-                cmd: commandLine,
-                pid: process.pid,
-                ppid: process.ppid,
-                load: process.cpu || 0,
-                mem: process.memory || 0,
+      require('windows-process-tree').then((windowsProcessTree: any) => {
+        windowsProcessTree.getProcessList(
+          rootPid,
+          (processList: any[]) => {
+            windowsProcessTree.getProcessCpuUsage(processList, (completeProcessList: any[]) => {
+              completeProcessList.forEach((process: any) => {
+                const commandLine = cleanUNCPrefix(process.commandLine || '');
+                processMap.set(process.pid, {
+                  cmd: commandLine,
+                  pid: process.pid,
+                  ppid: process.ppid,
+                  load: process.cpu || 0,
+                  mem: process.memory || 0,
+                });
               });
-            });
 
-            resolve(processMap);
-          });
-        }, windowsProcessTree.ProcessDataFlag.CommandLine | windowsProcessTree.ProcessDataFlag.Memory);
+              resolve(processMap);
+            });
+          },
+          windowsProcessTree.ProcessDataFlag.CommandLine | windowsProcessTree.ProcessDataFlag.Memory
+        );
       });
-    } else {	// OS X & Linux
+    } else {
+      // OS X & Linux
       exec('which ps', {}, (err, stdout, stderr) => {
         if (err || stderr) {
           if (process.platform !== 'linux') {
             reject(err || new Error(stderr.toString()));
           } else {
-            const cmd = JSON.stringify(path.join(__dirname, './ps.sh', require).fsPath);
+            const cmd = JSON.stringify(path.join(__dirname, './ps.sh', require as any));
             exec(cmd, {}, (err, stdout, stderr) => {
               if (err || stderr) {
                 reject(err || new Error(stderr.toString()));
@@ -99,7 +108,7 @@ function listProcesses(rootPid) {
   });
 }
 
-function parsePsOutput(stdout, addToTree) {
+function parsePsOutput(stdout: string, addToTree: (pid: number, ppid: number, cmd: string, load: number, mem: number) => void): void {
   const PID_CMD = /^\s*([0-9]+)\s+([0-9]+)\s+([0-9]+\.[0-9]+)\s+([0-9]+\.[0-9]+)\s+(.+)$/;
   const lines = stdout.toString().split('\n');
   for (const line of lines) {
@@ -109,7 +118,3 @@ function parsePsOutput(stdout, addToTree) {
     }
   }
 }
-
-module.exports = {
-  listProcesses,
-};

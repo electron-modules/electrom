@@ -1,23 +1,29 @@
-import React from 'react';
 import { Tabs } from 'antd';
 import { ProcessDetail } from '../ProcessDetail';
 import { WebContentsDetail } from '../WebContentsDetail';
 
 import style from './index.module.less';
+import { ProcessInfo } from 'src/common/interface';
 
-export const BottomPanel = ({ processInfo, ipcRenderer, eventActionChannelName }) => {
+interface BottomPanelProps {
+  processInfo?: ProcessInfo;
+  ipcRenderer: Window['electron']['ipcRenderer'];
+  eventActionChannelName: string;
+}
+
+export const BottomPanel = ({ processInfo, ipcRenderer, eventActionChannelName }: BottomPanelProps) => {
   if (!processInfo) {
     return null;
   }
-  const openDevTools = webContentInfo => {
+  const openDevTools = (webContentInfo: ProcessInfo['webContentInfo']) => {
     ipcRenderer.send(eventActionChannelName, 'openDevTools', webContentInfo);
   };
 
-  const killProcess = item => {
+  const killProcess = (item: any) => {
     ipcRenderer.send(eventActionChannelName, 'killProcess', item);
   };
 
-  return <>
+  return (
     <div className={style.bottom_info}>
       <Tabs defaultActiveKey="1">
         <Tabs.TabPane tab="Process" key="Process">
@@ -30,5 +36,5 @@ export const BottomPanel = ({ processInfo, ipcRenderer, eventActionChannelName }
         )}
       </Tabs>
     </div>
-  </>
-}
+  );
+};

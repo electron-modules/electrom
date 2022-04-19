@@ -1,10 +1,8 @@
-'use strict';
-
-const fs = require('fs');
-const path = require('path');
-const moment = require('moment');
-const _ = require('lodash');
-const filesize = require('filesize');
+import fs from 'fs';
+import path from 'path';
+import moment from 'moment';
+import _ from 'lodash';
+import filesize from 'filesize';
 
 const templatePath = path.join(__dirname, 'reporter.template.html');
 const template = fs.readFileSync(templatePath, 'utf8');
@@ -17,9 +15,7 @@ const TYPE_SORT_INDEX_MAP = {
   Nil: '4',
 };
 
-class Reporter {}
-
-const calcAll = array => {
+const calcAll = (array: number[]) => {
   const avg = _.mean(array);
   const min = _.min(array);
   const max = _.max(array);
@@ -30,14 +26,14 @@ const calcAll = array => {
   };
 };
 
-const formatCPUUsage = value => `${_.round(value * 10, 2)}%`;
-const formatMemory = value => filesize(value * 1024);
+const formatCPUUsage = (value: number) => `${_.round(value * 10, 2)}%`;
+const formatMemory = (value: number) => filesize(value * 1024);
 
-const pickDataFromDir = (dir) => {
-  const res = [];
+export const pickDataFromDir = (dir: string) => {
+  const res: { key: string; data: any }[] = [];
   fs.readdirSync(dir)
-    .filter(file => path.extname(file) === '.json')
-    .forEach(file => {
+    .filter((file) => path.extname(file) === '.json')
+    .forEach((file) => {
       const filePath = path.join(dir, file);
       res.push({
         key: path.basename(file, path.extname(file)),
@@ -48,13 +44,21 @@ const pickDataFromDir = (dir) => {
   return res;
 };
 
-const genSummary = (originData) => {
-  const processDataMap = {};
+interface SummaryItem {
+  pid: number;
+  type: keyof typeof TYPE_SORT_INDEX_MAP;
+  creationTime: number;
+  memory: any;
+  cpu: any;
+}
+
+const genSummary = (originData: any[]) => {
+  const processDataMap: any = {};
   const pickCount = originData.length;
   originData.forEach((data) => {
     const formatTime = moment(parseInt(data.key, 10)).format('YYYY-MM-DD HH:mm:ss.SSS');
     data.formatTime = formatTime;
-    data.data.forEach(item => {
+    data.data.forEach((item: SummaryItem) => {
       const { pid, type, creationTime, memory, cpu } = item;
       const { percentCPUUsage } = cpu;
       const { workingSetSize, peakWorkingSetSize } = memory;
@@ -80,21 +84,18 @@ const genSummary = (originData) => {
   };
 };
 
-const genTextReporter = (originData) => {
+export const genTextReporter = (originData: any[]) => {
   const data = genSummary(originData);
   const { pickCount, processDataArray } = data;
-  const list = [];
-  processDataArray.forEach(item => {
+  const list: string[] = [];
+  processDataArray.forEach((item: any) => {
     list.push(`pid: ${item.pid}(${item.type})`);
-    const mem = calcAll(item.memoryWorkingSetSize);
-    list.push(`mem: ${formatMemory(mem.avg)}(avg) ${formatMemory(mem.max)}(max) ${formatMemory(mem.min)}(min)`);
-    const cpu = calcAll(item.percentCPUUsage);
-    list.push(`cpu: ${formatCPUUsage(cpu.avg)}(avg) ${formatCPUUsage(cpu.max)}(max) ${formatCPUUsage(cpu.min)}(min)`);
+    const mem: { max?: number; min?: number; avg?: number } = calcAll(item.memoryWorkingSetSize);
+    list.push(`mem: ${formatMemory(mem.avg || 0)}(avg) ${formatMemory(mem.max || 0)}(max) ${formatMemory(mem.min || 0)}(min)`);
+    const cpu: { max?: number; min?: number; avg?: number } = calcAll(item.percentCPUUsage);
+    list.push(`cpu: ${formatCPUUsage(cpu.avg || 0)}(avg) ${formatCPUUsage(cpu.max || 0)}(max) ${formatCPUUsage(cpu.min || 0)}(min)`);
   });
-  const str = [
-    `pick: ${pickCount}`,
-    `${list.join('\n')}`,
-  ].join('\n');
+  const str = [`pick: ${pickCount}`, `${list.join('\n')}`].join('\n');
   return {
     pickCount,
     str,
@@ -103,13 +104,11 @@ const genTextReporter = (originData) => {
   };
 };
 
-const renderHtmlReporter = (originData) => {
+export const renderHtmlReporter = (originData: any[]) => {
   const data = genSummary(originData);
   return template.replace(/\/\/\s+insert-global-data/g, `window.data = ${JSON.stringify(data)};`);
 };
 
-Reporter.genTextReporter = genTextReporter;
-Reporter.renderHtmlReporter = renderHtmlReporter;
-Reporter.pickDataFromDir = pickDataFromDir;
+const Reporter = { genTextReporter, renderHtmlReporter, pickDataFromDir };
 
-module.exports = Reporter;
+export default Reporter;

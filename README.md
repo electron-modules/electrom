@@ -41,7 +41,6 @@ npm i electrom --save-dev
 
 ## Usage
 ```shell
-npm run dev:web
 npm run dev
 ```
 
