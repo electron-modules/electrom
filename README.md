@@ -1,15 +1,15 @@
 # electrom
 
 [![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
+[![CI][CI-image]][CI-url]
 [![Test coverage][coveralls-image]][coveralls-url]
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
 
 [npm-image]: https://img.shields.io/npm/v/electrom.svg
 [npm-url]: https://npmjs.org/package/electrom
-[travis-image]: https://api.travis-ci.com/electron-modules/electrom.svg?branch=master
-[travis-url]: https://travis-ci.com/github/electron-modules/electrom
+[CI-image]: https://github.com/electron-modules/electrom/actions/workflows/ci.yml/badge.svg
+[CI-url]: https://github.com/electron-modules/electrom/actions/workflows/ci.yml
 [coveralls-image]: https://img.shields.io/coveralls/electron-modules/electrom.svg
 [coveralls-url]: https://coveralls.io/r/electron-modules/electrom?branch=master
 [node-image]: https://img.shields.io/badge/node.js-%3E=_8-green.svg
