@@ -19,16 +19,19 @@ module.exports = {
       {
         test: /\.tsx?$/,
         loader: 'ts-loader',
-      }, {
+      },
+      {
         test: /\.mjs$/,
         include: /node_modules/,
         type: 'javascript/auto',
-      }, {
+      },
+      {
         test: /\.json$/,
         loader: 'json-loader',
         type: 'javascript/auto',
         exclude: /node_modules/,
-      }, {
+      },
+      {
         test: /\.less$/,
         include: /node_modules/,
         use: [
@@ -45,7 +48,8 @@ module.exports = {
             },
           },
         ],
-      }, {
+      },
+      {
         test: /\.less$/,
         exclude: /node_modules/,
         use: [
@@ -63,7 +67,8 @@ module.exports = {
             loader: 'less-loader',
           },
         ],
-      }, {
+      },
+      {
         test: /.css$/,
         use: [
           {

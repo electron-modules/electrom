@@ -11,6 +11,11 @@ module.exports = {
     // Since React 17 and typescript 4.1 you can safely disable the rule
     'react/react-in-jsx-scope': 'off',
     '@typescript-eslint/no-shadow': 'warn',
+    // disable browser compat check
+    'compat/compat': 0,
+    'promise/catch-or-return': 0,
+    // disable for ts
+    '@typescript-eslint/no-use-before-define': 0,
     'import/extensions': [
       'error',
       'ignorePackages',
@@ -37,6 +42,9 @@ module.exports = {
         config: require.resolve('./webpack.config.js'),
       },
       typescript: {},
+    },
+    react: {
+      version: 'detect', // React version. "detect" automatically picks the version you have installed.
     },
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
