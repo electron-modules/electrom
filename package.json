@@ -8,7 +8,7 @@
     "dev:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only ./example/main.ts",
     "dev:web": "cross-env NODE_ENV=development webpack-dev-server",
     "test": "jest",
-    "lint": "eslint . --fix",
+    "lint": "eslint --fix --quiet --ext .js,.jsx,.ts,.tsx .",
     "contributor": "git-contributor"
   },
   "keywords": [
@@ -55,6 +55,7 @@
     "eslint-config-erb": "^4.0.0-alpha.0",
     "eslint-config-prettier": "^6.3.0",
     "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-plugin-compat": "^4.0.2",
     "eslint-plugin-jest": "^26.1.4",
     "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-no-only-tests": "^2.6.0",

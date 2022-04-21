@@ -45,7 +45,7 @@ export function listProcesses(rootPid: number): Promise<Map<number, ProcessItem>
       };
 
       require('windows-process-tree').then((windowsProcessTree: any) => {
-        windowsProcessTree.getProcessList(
+        return windowsProcessTree.getProcessList(
           rootPid,
           (processList: any[]) => {
             windowsProcessTree.getProcessCpuUsage(processList, (completeProcessList: any[]) => {
@@ -63,7 +63,7 @@ export function listProcesses(rootPid: number): Promise<Map<number, ProcessItem>
               resolve(processMap);
             });
           },
-          windowsProcessTree.ProcessDataFlag.CommandLine | windowsProcessTree.ProcessDataFlag.Memory
+          windowsProcessTree.ProcessDataFlag.CommandLine | windowsProcessTree.ProcessDataFlag.Memory,
         );
       });
     } else {
