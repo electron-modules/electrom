@@ -2,7 +2,7 @@
 
 [![NPM version][npm-image]][npm-url]
 [![CI][CI-image]][CI-url]
-[![Test coverage][coveralls-image]][coveralls-url]
+[![Test coverage][codecov-image]][codecov-url]
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
 
@@ -10,8 +10,8 @@
 [npm-url]: https://npmjs.org/package/electrom
 [CI-image]: https://github.com/electron-modules/electrom/actions/workflows/ci.yml/badge.svg
 [CI-url]: https://github.com/electron-modules/electrom/actions/workflows/ci.yml
-[coveralls-image]: https://img.shields.io/coveralls/electron-modules/electrom.svg
-[coveralls-url]: https://coveralls.io/r/electron-modules/electrom?branch=master
+[codecov-image]: https://img.shields.io/codecov/c/github/electron-modules/electrom.svg?logo=codecov
+[codecov-url]: https://codecov.io/gh/electron-modules/electrom
 [node-image]: https://img.shields.io/badge/node.js-%3E=_8-green.svg
 [node-url]: http://nodejs.org/download/
 [download-image]: https://img.shields.io/npm/dm/electrom.svg
