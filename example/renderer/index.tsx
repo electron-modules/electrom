@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import classnames from 'classnames';
-import 'antd/dist/antd.css';
 import StatusBoard from '../../src/StatusBoard';
 import PerfBoard from '../../src/PerfBoard';
+
+import 'antd/dist/antd.css';
+
 import styles from './index.module.less';
 
 const container = document.querySelector('#app');
@@ -41,5 +43,4 @@ const App = () => {
   );
 };
 
-const root = createRoot(container!);
-root.render(<App />);
+ReactDOM.render(<App />, container);
