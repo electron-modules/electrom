@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Table } from 'antd';
-import filesize from 'filesize';
+import { Button, Table } from 'antd';
+import fileSize from 'filesize';
 import { round } from 'lodash';
 import { BottomPanel } from './components/BottomPanel';
 
@@ -54,22 +54,27 @@ const findCommonStringPlus = (strs: string[]) => {
     return -1;
   }
 
-  const indexs = [];
+  const indexes = [];
   for (let i = 1; i < strs.length; i++) {
-    indexs.push(findCommonString(strs[i - 1], strs[i]));
+    indexes.push(findCommonString(strs[i - 1], strs[i]));
   }
-  return Math.min(...indexs);
+  return Math.min(...indexes);
 };
 
 // 测试共同字符串数量
 const MAX_COMMON_STRING_TEST = 3;
 
-const useViewModel = (props: any) => {
+const useViewModel = (props: StatusBoardProps) => {
   const { ipcRenderer } = props;
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<ProcessInfo[]>([]);
   const [processBaseIndex, setProcessBaseIndex] = useState(-1);
+  const [selectedProcess, setSelectedProcess] = useState<ProcessInfo>();
 
-  const columns: ColumnsType<any> = [
+  const openDevTools = (webContentInfo: ProcessInfo['webContentInfo']) => {
+    ipcRenderer.send(props.eventActionChannelName, 'openDevTools', webContentInfo);
+  };
+
+  const columns: ColumnsType<ProcessInfo> = [
     {
       title: 'Process',
       dataIndex: 'cmd',
@@ -77,7 +82,7 @@ const useViewModel = (props: any) => {
       fixed: 'right',
     },
     {
-      title: 'type',
+      title: 'Type',
       dataIndex: 'type',
       width: '80px',
       filters: Array.from(new Set(data.map((item) => item.type))).map((item) => {
@@ -87,15 +92,15 @@ const useViewModel = (props: any) => {
         };
       }),
       defaultFilteredValue: [],
-      onFilter: (value: any, record: any) => record.type === value,
+      onFilter: (value, record) => record.type === value,
       ellipsis: true,
       filterMultiple: false,
       fixed: 'right',
     },
     {
-      title: 'load',
+      title: 'Load',
       dataIndex: 'load',
-      sorter: (a: number, b: number) => a - b,
+      sorter: (a, b) => a.load - b.load,
       render: (load: number) => load,
       width: '60px',
       fixed: 'right',
@@ -109,18 +114,18 @@ const useViewModel = (props: any) => {
       fixed: 'right',
     },
     {
-      title: 'working',
+      title: 'Working',
       dataIndex: 'memory',
       sorter: (a: { memory: MemoryStats }, b: { memory: MemoryStats }) => a.memory.workingSetSize - b.memory.workingSetSize,
-      render: (memory: MemoryStats) => filesize(memory.workingSetSize * 1024),
+      render: (memory: MemoryStats) => fileSize(memory.workingSetSize * 1024),
       width: '100px',
       fixed: 'right',
     },
     {
-      title: 'peak',
+      title: 'Peak',
       dataIndex: 'memory',
       sorter: (a: { memory: MemoryStats }, b: { memory: MemoryStats }) => a.memory.peakWorkingSetSize - b.memory.peakWorkingSetSize,
-      render: (memory: MemoryStats) => filesize(memory.peakWorkingSetSize * 1024),
+      render: (memory: MemoryStats) => fileSize(memory.peakWorkingSetSize * 1024),
       width: '100px',
       fixed: 'right',
     },
@@ -129,6 +134,29 @@ const useViewModel = (props: any) => {
       dataIndex: 'pid',
       width: '65px',
       fixed: 'right',
+    },
+    {
+      title: 'Action',
+      dataIndex: 'type',
+      width: '85px',
+      fixed: 'right',
+      render: (type: string, item) => {
+        const isDevtoolsSelf = !!item.webContentInfo?.url.startsWith('devtools://devtools');
+        if (type === 'Tab' && !isDevtoolsSelf) {
+          return (
+            <Button
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                openDevTools(item.webContentInfo);
+              }}
+            >
+              devtool
+            </Button>
+          );
+        }
+        return null;
+      },
     },
   ];
 
@@ -146,14 +174,16 @@ const useViewModel = (props: any) => {
     return () => {
       ipcRenderer.removeListener(props.eventDataChannelName, updateAppMetrics);
     };
-  }, []);
-
-  useEffect(() => {}, [data]);
+  }, [ipcRenderer, props.eventDataChannelName]);
 
   return {
     state: {
       columns,
       data,
+      selectedProcess,
+    },
+    actions: {
+      setSelectedProcess,
     },
   };
 };
@@ -166,11 +196,10 @@ interface StatusBoardProps {
 }
 
 export const StatusBoard = (props: StatusBoardProps) => {
-  const vm = useViewModel(props);
   const {
-    state: { columns, data },
-  } = vm;
-  const [selectedProcess, setSelectedProcess] = useState<ProcessInfo>();
+    state: { columns, data, selectedProcess },
+    actions: { setSelectedProcess },
+  } = useViewModel(props);
 
   return (
     <div className={styles.wrapper}>
