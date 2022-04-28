@@ -8,7 +8,7 @@
     "dev:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only ./example/main.ts",
     "dev:web": "cross-env NODE_ENV=development webpack-dev-server",
     "test": "jest",
-    "lint": "eslint --fix --quiet --ext .js,.jsx,.ts,.tsx .",
+    "lint": "eslint --fix --quiet --ext .js,.jsx,.ts,.tsx ./src",
     "contributor": "git-contributor"
   },
   "main": "./lib/main/electrom",
