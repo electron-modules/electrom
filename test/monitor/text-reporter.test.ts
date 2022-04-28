@@ -1,7 +1,7 @@
 import path from 'path';
 import assert from 'assert';
 
-import Reporter from '../../lib/monitor/reporter';
+import Reporter from '../../src/main/monitor/reporter';
 
 describe('test/monitor/text-reporter.test.js', () => {
   let res;

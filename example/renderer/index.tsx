@@ -1,14 +1,21 @@
 import { useState } from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import classnames from 'classnames';
+import { PreloadElectron } from '../../src/common/window';
+import { StatusBoard, PerfBoard, EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from '../../src/renderer';
+
 import 'antd/dist/antd.css';
-import StatusBoard from '../../src/StatusBoard';
-import PerfBoard from '../../src/PerfBoard';
+
 import styles from './index.module.less';
+
+declare global {
+  interface Window {
+    electron: PreloadElectron;
+  }
+}
 
 const container = document.querySelector('#app');
 
-const params = new URLSearchParams(location.search);
 const { ipcRenderer, shell } = window.electron;
 
 const App = () => {
@@ -16,8 +23,8 @@ const App = () => {
   return (
     <>
       <StatusBoard
-        eventDataChannelName={params.get('EVENT_DATA_CHANNEL_NAME') || ''}
-        eventActionChannelName={params.get('EVENT_ACTION_CHANNEL_NAME') || ''}
+        eventDataChannelName={EVENT_DATA_CHANNEL_NAME}
+        eventActionChannelName={EVENT_ACTION_CHANNEL_NAME}
         ipcRenderer={ipcRenderer}
         shell={shell}
       />
@@ -41,5 +48,4 @@ const App = () => {
   );
 };
 
-const root = createRoot(container!);
-root.render(<App />);
+ReactDOM.render(<App />, container);

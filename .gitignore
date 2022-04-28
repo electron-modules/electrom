@@ -1,9 +1,11 @@
 node_modules
 .nyc_output
 coverage
+!src/main/coverage
 *.gz
 *.sw*
 *.un~
 .electrom
 dist
 .eslintcache
+lib

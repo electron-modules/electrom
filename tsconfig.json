@@ -22,9 +22,15 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "allowJs": true,
-    "outDir": "dist"
+    "skipLibCheck": true,
+    "outDir": "lib"
   },
+  "include": [
+    "src/**/*",
+  ],
   "exclude": [
     "dist",
-  ],
+    "lib",
+    "node_modules",
+  ]
 }

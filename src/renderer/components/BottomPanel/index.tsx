@@ -3,11 +3,12 @@ import { ProcessDetail } from '../ProcessDetail';
 import { WebContentsDetail } from '../WebContentsDetail';
 
 import style from './index.module.less';
-import { ProcessInfo } from 'src/common/interface';
+import { ProcessInfo } from '../../../common/interface';
+import type { PreloadElectron } from 'src/common/window';
 
 interface BottomPanelProps {
   processInfo?: ProcessInfo;
-  ipcRenderer: Window['electron']['ipcRenderer'];
+  ipcRenderer: PreloadElectron['ipcRenderer'];
   eventActionChannelName: string;
 }
 
