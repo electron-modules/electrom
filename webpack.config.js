@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const bindMiddleware = require('./src/main/coverage/middleware');
+const bindMiddleware = require('./src/coverage/middleware');
 
 module.exports = {
   entry: './example/renderer',

@@ -18,10 +18,11 @@
     "ps"
   ],
   "files": [
-    "lib/**/*.js",
-    "lib/coverage/reporter.html",
-    "lib/monitor/reporter.template.html",
-    "src/**/*.jsx",
+    "src/coverage/reporter.html",
+    "src/renderer/monitor/reporter.template.html",
+    "src/**/*.js",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     "src/**/*.less"
   ],
   "repository": {
