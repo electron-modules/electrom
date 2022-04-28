@@ -3,6 +3,7 @@ import { Button, Table } from 'antd';
 import fileSize from 'filesize';
 import { round } from 'lodash';
 import { BottomPanel } from './components/BottomPanel';
+import { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from '../common/constants';
 
 import styles from './StatusBoard.module.less';
 import { ColumnsType } from 'antd/lib/table';
@@ -218,9 +219,18 @@ export const StatusBoard = (props: StatusBoardProps) => {
           },
         })}
       />
-      <BottomPanel processInfo={selectedProcess} ipcRenderer={props.ipcRenderer} eventActionChannelName={props.eventActionChannelName} />
+      <BottomPanel
+        processInfo={selectedProcess}
+        ipcRenderer={props.ipcRenderer}
+        eventActionChannelName={props.eventActionChannelName}
+      />
     </div>
   );
+};
+
+StatusBoard.defaultProps = {
+  eventActionChannelName: EVENT_ACTION_CHANNEL_NAME,
+  eventDataChannelName: EVENT_DATA_CHANNEL_NAME,
 };
 
 export default StatusBoard;

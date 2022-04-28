@@ -1,6 +1,6 @@
 {
   "name": "electrom",
-  "version": "17.1.6",
+  "version": "17.1.11",
   "description": "Electrom is a resource management solution for Electron applications, which is convenient for performance management and friendly debugging of multiple windows",
   "scripts": {
     "build": "tsc && copyup src/**/*.html lib/",
@@ -11,16 +11,17 @@
     "lint": "eslint --fix --quiet --ext .js,.jsx,.ts,.tsx ./src",
     "contributor": "git-contributor"
   },
-  "main": "./lib/main/electrom",
+  "main": "./lib/main",
   "keywords": [
     "electron",
     "electrom",
     "ps"
   ],
   "files": [
-    "src/coverage/reporter.html",
-    "src/renderer/monitor/reporter.template.html",
-    "src/**/*.js",
+    "lib/common/**/*.js",
+    "lib/main/**/*.js",
+    "lib/main/coverage/reporter.html",
+    "lib/main/monitor/reporter.template.html",
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.less"

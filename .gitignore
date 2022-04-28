@@ -1,7 +1,7 @@
 node_modules
 .nyc_output
 coverage
-!src/coverage
+!src/main/coverage
 *.gz
 *.sw*
 *.un~
