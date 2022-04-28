@@ -1,4 +1,4 @@
-import { Monitor } from '../lib/electrom';
+import { Monitor } from '../src/main/electrom';
 
 describe('test', () => {
   it('should be ok', () => {

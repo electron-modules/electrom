@@ -46,16 +46,32 @@ npm run dev
 
 ## APIs
 
-```javascript
-const electrom = require('electrom');
+```typescript
+// main process: import electrom
+import { EVENT_DATA_CHANNEL_NAME, Monitor } from 'electrom';
 
-electrom()
-  .then(data => {
-    console.log(data);
-  })
-  .catch(e) {
-    console.log(e);
-  }
+const monitor = new Monitor();
+mainWindow.webContents.on('dom-ready', () => {
+  monitor.on(EVENT_DATA_CHANNEL_NAME, (data: any) => {
+    mainWindow.webContents.send(EVENT_DATA_CHANNEL_NAME, data);
+  });
+  monitor.bindEventToWindow(mainWindow);
+  monitor.start();
+});
+```
+
+```javascript
+// renderer process: import electrom renderer
+import { StatusBoard, PerfBoard, EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from 'electrom/renderer';
+
+const { ipcRenderer, shell } = window.electron;
+
+<StatusBoard
+  eventDataChannelName={EVENT_DATA_CHANNEL_NAME}
+  eventActionChannelName={EVENT_ACTION_CHANNEL_NAME}
+  ipcRenderer={ipcRenderer}
+  shell={shell}
+/>
 ```
 
 ## preload file

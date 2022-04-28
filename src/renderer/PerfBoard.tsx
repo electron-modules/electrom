@@ -6,7 +6,7 @@ const BOARD_HEIGHT = 48;
 const TEXT_COLOR = 'rgb(0, 255, 0)';
 const BORDER_COLOR = 'rgb(17, 51, 17)';
 
-const PerfBoard = () => {
+export const PerfBoard = () => {
   const containerRef = useRef<HTMLDivElement | null>();
   useEffect(() => {
     if (!containerRef.current) return;

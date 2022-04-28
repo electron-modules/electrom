@@ -1,12 +1,15 @@
 import { pick } from 'lodash';
 import { join } from 'path';
 import { promises as fs } from 'fs';
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import { app, BrowserWindow, webContents } from 'electron';
 
-export * from './reporter';
 import { listProcesses } from './ps';
-import { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from './constants';
+import { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from '../../common/constants';
+import { ProcessInfo } from '../../common/interface';
+
+export * from './reporter';
+export * from '../../common/constants';
 
 interface MonitorOptions {
   threshold?: number;
@@ -57,7 +60,7 @@ export class Monitor extends EventEmitter {
     this.emit(EVENT_DATA_CHANNEL_NAME, data);
   }
 
-  async dump(data: any) {
+  async dump(data: ProcessInfo[]) {
     const { dumpDir, dumpThreshold } = this.options;
     if (!dumpDir) return;
     const now = Date.now();

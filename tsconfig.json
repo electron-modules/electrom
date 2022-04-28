@@ -25,7 +25,12 @@
     "skipLibCheck": true,
     "outDir": "lib"
   },
+  "include": [
+    "src/**/*",
+  ],
   "exclude": [
-    "lib"
+    "dist",
+    "lib",
+    "node_modules",
   ]
 }

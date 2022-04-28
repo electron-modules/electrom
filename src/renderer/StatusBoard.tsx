@@ -6,7 +6,8 @@ import { BottomPanel } from './components/BottomPanel';
 
 import styles from './StatusBoard.module.less';
 import { ColumnsType } from 'antd/lib/table';
-import { ProcessInfo } from './common/interface';
+import type { ProcessInfo } from '../common/interface';
+import type { PreloadElectron } from 'src/common/window';
 
 interface MemoryStats {
   workingSetSize: number;
@@ -100,7 +101,7 @@ const useViewModel = (props: StatusBoardProps) => {
     {
       title: 'Load',
       dataIndex: 'load',
-      sorter: (a, b) => a.load - b.load,
+      sorter: (a, b) => (a.load && b.load ? a.load - b.load : 0),
       render: (load: number) => load,
       width: '60px',
       fixed: 'right',
@@ -189,8 +190,8 @@ const useViewModel = (props: StatusBoardProps) => {
 };
 
 interface StatusBoardProps {
-  shell: Window['electron']['shell'];
-  ipcRenderer: Window['electron']['ipcRenderer'];
+  shell: PreloadElectron['shell'];
+  ipcRenderer: PreloadElectron['ipcRenderer'];
   eventActionChannelName: string;
   eventDataChannelName: string;
 }

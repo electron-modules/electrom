@@ -3,7 +3,7 @@
   "version": "17.1.5",
   "description": "Electrom is a resource management solution for Electron applications, which is convenient for performance management and friendly debugging of multiple windows",
   "scripts": {
-    "build": "webpack",
+    "build": "tsc && copyup src/**/*.html lib/",
     "dev": "concurrently npm:dev:*",
     "dev:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only ./example/main.ts",
     "dev:web": "cross-env NODE_ENV=development webpack-dev-server",
@@ -11,6 +11,7 @@
     "lint": "eslint --fix --quiet --ext .js,.jsx,.ts,.tsx .",
     "contributor": "git-contributor"
   },
+  "main": "./lib/main/electrom",
   "keywords": [
     "electron",
     "electrom",
@@ -44,6 +45,7 @@
     "antd": "^4.9.4",
     "classnames": "^2.2.6",
     "concurrently": "^5.3.0",
+    "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "css-loader": "^0.28.8",
     "electron": "17",

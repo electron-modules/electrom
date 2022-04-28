@@ -3,9 +3,7 @@ import path from 'path';
 import WindowManager from 'electron-windows';
 import { app } from 'electron';
 import waitPort from 'wait-port';
-import { Monitor } from '../lib/monitor';
-import { PerfTracing } from '../lib/perf/tracing';
-import { EVENT_ACTION_CHANNEL_NAME, EVENT_DATA_CHANNEL_NAME } from '../lib/monitor/constants';
+import { Monitor, PerfTracing, EVENT_ACTION_CHANNEL_NAME, EVENT_DATA_CHANNEL_NAME } from '../src/main';
 
 const monitor = new Monitor();
 

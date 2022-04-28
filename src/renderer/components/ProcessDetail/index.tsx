@@ -1,5 +1,5 @@
 import { Button } from 'antd';
-import type { ProcessInfo } from 'src/common/interface';
+import type { ProcessInfo } from '../../../common/interface';
 
 import style from './index.module.less';
 
