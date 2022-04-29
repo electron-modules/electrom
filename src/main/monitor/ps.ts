@@ -126,7 +126,7 @@ function getWindowsProcessList(rootPid: number) {
       .filter(Boolean);
   };
 
-  const childProcessListPromise = new Promise<WindowsProcess[]>((resolve, reject) => {
+  const processListPromise = new Promise<WindowsProcess[]>((resolve, reject) => {
     exec(
       `Get-CIMInstance -ClassName win32_process -filter "processid = ${rootPid}" | Select ProcessId, CommandLine | out-string -Width 1000`,
       { shell: 'powershell.exe' },
@@ -148,7 +148,7 @@ function getWindowsProcessList(rootPid: number) {
     );
   });
 
-  const processListPromise = new Promise<WindowsProcess[]>((resolve, reject) => {
+  const childProcessListPromise = new Promise<WindowsProcess[]>((resolve, reject) => {
     exec(getWindowsPsCodeWithChild(rootPid), { shell: 'powershell.exe' }, (error, stdout, stderr) => {
       if (error) {
         reject(error);
@@ -166,5 +166,5 @@ function getWindowsProcessList(rootPid: number) {
     });
   });
 
-  return Promise.all([childProcessListPromise, processListPromise]).then((arr) => arr.flat());
+  return Promise.all([processListPromise, childProcessListPromise]).then((arr) => arr.flat());
 }
