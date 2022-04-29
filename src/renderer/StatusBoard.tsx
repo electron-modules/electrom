@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { Button, Table } from 'antd';
 import fileSize from 'filesize';
 import { round } from 'lodash';
+import { ColumnsType } from 'antd/lib/table';
+import type { PreloadElectron } from 'src/common/window';
 import { BottomPanel } from './components/BottomPanel';
 import { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from '../common/constants';
 
 import styles from './StatusBoard.module.less';
-import { ColumnsType } from 'antd/lib/table';
 import type { ProcessInfo } from '../common/interface';
-import type { PreloadElectron } from 'src/common/window';
 
 interface MemoryStats {
   workingSetSize: number;
@@ -29,16 +29,14 @@ const findName = (cmd: string, startIndex = 0) => {
   const index = cmd.indexOf(' -');
   const end = index !== -1 ? index : cmd.length;
   if (startIndex > 0) {
-    return '...' + cmd.substring(startIndex + 1, end);
-  } else {
-    const simplePath = cmd.substring(0, end);
-    const matched = simplePath.match(PROCESS_REGEX);
-    if (matched) {
-      return matched[1];
-    } else {
-      return simplePath;
-    }
+    return `...${cmd.substring(startIndex + 1, end)}`;
   }
+  const simplePath = cmd.substring(0, end);
+  const matched = simplePath.match(PROCESS_REGEX);
+  if (matched) {
+    return matched[1];
+  }
+  return simplePath;
 };
 
 /**
@@ -47,7 +45,7 @@ const findName = (cmd: string, startIndex = 0) => {
 const findCommonString = (str1: string, str2: string) => {
   let index = -1;
   const minLen = Math.min(str1.length, str2.length);
-  for (let i = 0; i < minLen; i++) {
+  for (let i = 0; i < minLen; ++i) {
     if (str1[i] === str2[i]) {
       index = i;
     } else {
@@ -220,7 +218,7 @@ export const StatusBoard = (props: StatusBoardProps) => {
         pagination={false}
         size="small"
         tableLayout="fixed"
-        rowKey={'pid'}
+        rowKey="pid"
         bordered={false}
         onRow={(record) => ({
           onClick: () => {
@@ -228,11 +226,7 @@ export const StatusBoard = (props: StatusBoardProps) => {
           },
         })}
       />
-      <BottomPanel
-        processInfo={selectedProcess}
-        ipcRenderer={props.ipcRenderer}
-        eventActionChannelName={props.eventActionChannelName}
-      />
+      <BottomPanel processInfo={selectedProcess} ipcRenderer={props.ipcRenderer} eventActionChannelName={props.eventActionChannelName} />
     </div>
   );
 };

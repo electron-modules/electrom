@@ -1,10 +1,10 @@
 import { Tabs } from 'antd';
+import type { PreloadElectron } from 'src/common/window';
 import { ProcessDetail } from '../ProcessDetail';
 import { WebContentsDetail } from '../WebContentsDetail';
 
 import style from './index.module.less';
 import { ProcessInfo } from '../../../common/interface';
-import type { PreloadElectron } from 'src/common/window';
 
 interface BottomPanelProps {
   processInfo?: ProcessInfo;

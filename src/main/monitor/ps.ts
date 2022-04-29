@@ -13,7 +13,7 @@ export interface ProcessItem {
   children?: ProcessItem[];
 }
 
-function calculateLinuxCpuUsage() { }
+function calculateLinuxCpuUsage() {}
 
 export function listProcesses(rootPid: number): Promise<Map<number, ProcessItem>> {
   return new Promise((resolve, reject) => {
@@ -34,12 +34,15 @@ export function listProcesses(rootPid: number): Promise<Map<number, ProcessItem>
       const cleanUNCPrefix = (value: string): string => {
         if (value.indexOf('\\\\?\\') === 0) {
           return value.substr(4);
-        } else if (value.indexOf('\\??\\') === 0) {
+        }
+        if (value.indexOf('\\??\\') === 0) {
           return value.substr(4);
-        } else if (value.indexOf('"\\\\?\\') === 0) {
-          return '"' + value.substr(5);
-        } else if (value.indexOf('"\\??\\') === 0) {
-          return '"' + value.substr(5);
+        }
+        if (value.indexOf('"\\\\?\\') === 0) {
+          return `"${value.substr(5)}`;
+        }
+        if (value.indexOf('"\\??\\') === 0) {
+          return `"${value.substr(5)}`;
         }
         return value;
       };

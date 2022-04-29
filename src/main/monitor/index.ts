@@ -26,14 +26,12 @@ export class Monitor extends EventEmitter {
 
   constructor(options: MonitorOptions = {}) {
     super();
-    this.options = Object.assign(
-      {
-        threshold: 5e3,
-        dumpDir: null,
-        dumpThreshold: 10e3,
-      },
-      options,
-    );
+    this.options = {
+      threshold: 5e3,
+      dumpDir: null,
+      dumpThreshold: 10e3,
+      ...options,
+    };
   }
 
   stop() {

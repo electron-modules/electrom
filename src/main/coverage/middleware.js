@@ -1,5 +1,3 @@
-'use strict';
-
 const fs = require('fs');
 const url = require('url');
 const path = require('path');
@@ -47,7 +45,7 @@ module.exports = (app, server, options = {}) => {
           const { startOffset, endOffset, styleSheetId } = item;
           const metaData = meta[styleSheetId];
           if (metaData) {
-            const sourceURL = metaData.sourceURL;
+            const { sourceURL } = metaData;
             result[sourceURL] = result[sourceURL] || [];
             result[sourceURL].push({
               startOffset,

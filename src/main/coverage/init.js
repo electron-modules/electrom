@@ -1,5 +1,3 @@
-'use strict';
-
 const { BrowserWindow, app } = require('electron');
 
 const attachDebuggerToWindow = require('./attach');
@@ -22,7 +20,6 @@ app
 
     const { takeCoverageDelta } = await attachDebuggerToWindow(win);
     setInterval(takeCoverageDelta, 5000);
-    return;
   })
   .catch((error) => {
     console.error(error);
