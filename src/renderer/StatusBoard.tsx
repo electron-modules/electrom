@@ -19,6 +19,9 @@ interface CpuStatus {
   percentCPUUsage: number;
 }
 
+// 提取双引号的内容
+const PROCESS_REGEX = /"?([^"]*)"?/;
+
 /**
  * 获取进程 cmd 的简易信息
  */
@@ -28,7 +31,13 @@ const findName = (cmd: string, startIndex = 0) => {
   if (startIndex > 0) {
     return '...' + cmd.substring(startIndex + 1, end);
   } else {
-    return cmd.substring(0, end);
+    const simplePath = cmd.substring(0, end);
+    const matched = simplePath.match(PROCESS_REGEX);
+    if (matched) {
+      return matched[1];
+    } else {
+      return simplePath;
+    }
   }
 };
 
@@ -103,7 +112,7 @@ const useViewModel = (props: StatusBoardProps) => {
       title: 'Load',
       dataIndex: 'load',
       sorter: (a, b) => (a.load && b.load ? a.load - b.load : 0),
-      render: (load: number) => load,
+      render: (load: number) => load.toFixed(2),
       width: '60px',
       fixed: 'right',
     },
@@ -140,7 +149,7 @@ const useViewModel = (props: StatusBoardProps) => {
     {
       title: 'Action',
       dataIndex: 'type',
-      width: '85px',
+      width: '90px',
       fixed: 'right',
       render: (type: string, item) => {
         const isDevtoolsSelf = !!item.webContentInfo?.url.startsWith('devtools://devtools');

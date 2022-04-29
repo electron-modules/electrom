@@ -9,7 +9,8 @@
     "dev:web": "cross-env NODE_ENV=development webpack-dev-server",
     "test": "jest",
     "lint": "eslint --fix --quiet --ext .js,.jsx,.ts,.tsx ./src",
-    "contributor": "git-contributor"
+    "contributor": "git-contributor",
+    "postinstall": "electron-rebuild"
   },
   "main": "./lib/main",
   "keywords": [
@@ -34,8 +35,8 @@
     "debug": "4.1.1",
     "filesize": "^6.1.0",
     "lodash": "4.17.15",
-    "moment": "2.24.0",
-    "mkdirp": "0.5.1"
+    "mkdirp": "0.5.1",
+    "moment": "2.24.0"
   },
   "devDependencies": {
     "@applint/spec": "^1.2.0",
@@ -51,11 +52,12 @@
     "cross-env": "^7.0.3",
     "css-loader": "^0.28.8",
     "electron": "17",
+    "electron-rebuild": "^3.2.7",
     "electron-windows": "17",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-egg": "^5.1.1",
-    "eslint-config-erb": "^4.0.0-alpha.0",
+    "eslint-config-erb": "^4.0.3",
     "eslint-config-prettier": "^6.3.0",
     "eslint-import-resolver-typescript": "^2.7.1",
     "eslint-plugin-compat": "^4.0.2",
@@ -83,6 +85,9 @@
     "webpack": "5.69.1",
     "webpack-cli": "4.9.0",
     "webpack-dev-server": "4.7.4"
+  },
+  "optionalDependencies": {
+    "windows-process-tree": "^0.3.3"
   },
   "husky": {
     "hooks": {

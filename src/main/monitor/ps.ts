@@ -13,7 +13,7 @@ export interface ProcessItem {
   children?: ProcessItem[];
 }
 
-function calculateLinuxCpuUsage() {}
+function calculateLinuxCpuUsage() { }
 
 export function listProcesses(rootPid: number): Promise<Map<number, ProcessItem>> {
   return new Promise((resolve, reject) => {
@@ -44,8 +44,9 @@ export function listProcesses(rootPid: number): Promise<Map<number, ProcessItem>
         return value;
       };
 
-      require('windows-process-tree').then((windowsProcessTree: any) => {
-        return windowsProcessTree.getProcessList(
+      try {
+        const windowsProcessTree = require('windows-process-tree');
+        windowsProcessTree.getProcessList(
           rootPid,
           (processList: any[]) => {
             windowsProcessTree.getProcessCpuUsage(processList, (completeProcessList: any[]) => {
@@ -65,7 +66,9 @@ export function listProcesses(rootPid: number): Promise<Map<number, ProcessItem>
           },
           windowsProcessTree.ProcessDataFlag.CommandLine | windowsProcessTree.ProcessDataFlag.Memory,
         );
-      });
+      } catch (err) {
+        reject(err);
+      }
     } else {
       // OS X & Linux
       exec('which ps', {}, (err, stdout, stderr) => {
