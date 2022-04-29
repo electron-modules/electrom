@@ -25,7 +25,10 @@ const PROCESS_REGEX = /"?([^"]*)"?/;
 /**
  * 获取进程 cmd 的简易信息
  */
-const findName = (cmd: string, startIndex = 0) => {
+const findName = (cmd?: string, startIndex = 0): string => {
+  if (!cmd) {
+    return '';
+  }
   const index = cmd.indexOf(' -');
   const end = index !== -1 ? index : cmd.length;
   if (startIndex > 0) {
@@ -42,8 +45,12 @@ const findName = (cmd: string, startIndex = 0) => {
 /**
  * 找出相同的字符串
  */
-const findCommonString = (str1: string, str2: string) => {
+const findCommonString = (str1?: string, str2?: string) => {
   let index = -1;
+  if (typeof str1 !== 'string' || typeof str2 !== 'string') {
+    return index;
+  }
+
   const minLen = Math.min(str1.length, str2.length);
   for (let i = 0; i < minLen; ++i) {
     if (str1[i] === str2[i]) {
@@ -107,17 +114,9 @@ const useViewModel = (props: StatusBoardProps) => {
       fixed: 'right',
     },
     {
-      title: 'Load',
-      dataIndex: 'load',
-      sorter: (a, b) => (a.load && b.load ? a.load - b.load : 0),
-      render: (load: number) => load.toFixed(2),
-      width: '60px',
-      fixed: 'right',
-    },
-    {
       title: 'CPU(%)',
       dataIndex: 'cpu',
-      sorter: (a: { cpu: CpuStatus }, b: { cpu: CpuStatus }) => a.cpu.percentCPUUsage - b.cpu.percentCPUUsage,
+      sorter: (a, b) => a.cpu.percentCPUUsage - b.cpu.percentCPUUsage,
       render: (cpu: CpuStatus) => round(cpu.percentCPUUsage * 10, 2),
       width: '80px',
       fixed: 'right',
@@ -125,7 +124,7 @@ const useViewModel = (props: StatusBoardProps) => {
     {
       title: 'Working',
       dataIndex: 'memory',
-      sorter: (a: { memory: MemoryStats }, b: { memory: MemoryStats }) => a.memory.workingSetSize - b.memory.workingSetSize,
+      sorter: (a, b) => a.memory.workingSetSize - b.memory.workingSetSize,
       render: (memory: MemoryStats) => fileSize(memory.workingSetSize * 1024),
       width: '100px',
       fixed: 'right',
@@ -133,7 +132,7 @@ const useViewModel = (props: StatusBoardProps) => {
     {
       title: 'Peak',
       dataIndex: 'memory',
-      sorter: (a: { memory: MemoryStats }, b: { memory: MemoryStats }) => a.memory.peakWorkingSetSize - b.memory.peakWorkingSetSize,
+      sorter: (a, b) => a.memory.peakWorkingSetSize - b.memory.peakWorkingSetSize,
       render: (memory: MemoryStats) => fileSize(memory.peakWorkingSetSize * 1024),
       width: '100px',
       fixed: 'right',

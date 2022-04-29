@@ -39,7 +39,6 @@ module.exports = getESLintConfig('react-ts', {
         'no-mixed-operators': 1,
         'react/jsx-closing-tag-location': 1,
         '@typescript-eslint/no-shadow': 1,
-        '@typescript-eslint/indent': 1,
       },
     },
   ],

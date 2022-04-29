@@ -9,8 +9,7 @@
     "dev:web": "cross-env NODE_ENV=development webpack-dev-server",
     "test": "jest",
     "lint": "eslint --fix --quiet --ext .js,.jsx,.ts,.tsx ./src",
-    "contributor": "git-contributor",
-    "postinstall": "electron-rebuild"
+    "contributor": "git-contributor"
   },
   "main": "./lib/main",
   "keywords": [
@@ -52,7 +51,6 @@
     "cross-env": "^7.0.3",
     "css-loader": "^0.28.8",
     "electron": "17",
-    "electron-rebuild": "^3.2.7",
     "electron-windows": "17",
     "eslint": "^7.32.0",
     "git-contributor": "*",
@@ -74,9 +72,6 @@
     "webpack": "5.69.1",
     "webpack-cli": "4.9.0",
     "webpack-dev-server": "4.7.4"
-  },
-  "optionalDependencies": {
-    "windows-process-tree": "^0.3.3"
   },
   "husky": {
     "hooks": {
