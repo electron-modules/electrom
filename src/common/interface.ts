@@ -1,6 +1,5 @@
 export interface ProcessInfo {
   cmd?: string;
-  load?: number;
   sandboxed?: boolean;
   cpu: {
     percentCPUUsage: number;

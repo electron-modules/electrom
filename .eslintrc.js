@@ -1,31 +1,7 @@
-module.exports = {
-  extends: ['erb', 'plugin:import/recommended'],
-  settings: {
-    react: {
-      version: 'latest',
-    },
-  },
+const { getESLintConfig } = require('@applint/spec');
+
+module.exports = getESLintConfig('react-ts', {
   rules: {
-    // A temporary hack related to IDE not resolving correct package.json
-    'import/no-extraneous-dependencies': 'off',
-    // Since React 17 and typescript 4.1 you can safely disable the rule
-    'react/react-in-jsx-scope': 'off',
-    '@typescript-eslint/no-shadow': 'warn',
-    // disable browser compat check
-    'compat/compat': 0,
-    'promise/catch-or-return': 0,
-    // disable for ts
-    '@typescript-eslint/no-use-before-define': 0,
-    'import/extensions': [
-      'error',
-      'ignorePackages',
-      {
-        js: 'never',
-        jsx: 'never',
-        ts: 'never',
-        tsx: 'never',
-      },
-    ],
   },
   parserOptions: {
     ecmaVersion: 2020,
@@ -52,19 +28,18 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['**/lib/**'],
+      files: ['src/renderer/**'],
       rules: {
         'react-hooks/rules-of-hooks': 0,
       },
     },
     {
-      files: ['**/src/**'],
+      files: ['src/main/**'],
       rules: {
         'no-mixed-operators': 1,
         'react/jsx-closing-tag-location': 1,
         '@typescript-eslint/no-shadow': 1,
-        '@typescript-eslint/indent': 1,
       },
     },
   ],
-};
+});

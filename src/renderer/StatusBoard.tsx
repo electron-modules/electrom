@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { Button, Table } from 'antd';
 import fileSize from 'filesize';
 import { round } from 'lodash';
+import { ColumnsType } from 'antd/lib/table';
+import type { PreloadElectron } from 'src/common/window';
 import { BottomPanel } from './components/BottomPanel';
 import { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from '../common/constants';
 
 import styles from './StatusBoard.module.less';
-import { ColumnsType } from 'antd/lib/table';
 import type { ProcessInfo } from '../common/interface';
-import type { PreloadElectron } from 'src/common/window';
 
 interface MemoryStats {
   workingSetSize: number;
@@ -19,26 +19,40 @@ interface CpuStatus {
   percentCPUUsage: number;
 }
 
+// 提取双引号的内容
+const PROCESS_REGEX = /"?([^"]*)"?/;
+
 /**
  * 获取进程 cmd 的简易信息
  */
-const findName = (cmd: string, startIndex = 0) => {
+const findName = (cmd?: string, startIndex = 0): string => {
+  if (!cmd) {
+    return '';
+  }
   const index = cmd.indexOf(' -');
   const end = index !== -1 ? index : cmd.length;
   if (startIndex > 0) {
-    return '...' + cmd.substring(startIndex + 1, end);
-  } else {
-    return cmd.substring(0, end);
+    return `...${cmd.substring(startIndex + 1, end)}`;
   }
+  const simplePath = cmd.substring(0, end);
+  const matched = simplePath.match(PROCESS_REGEX);
+  if (matched) {
+    return matched[1];
+  }
+  return simplePath;
 };
 
 /**
  * 找出相同的字符串
  */
-const findCommonString = (str1: string, str2: string) => {
+const findCommonString = (str1?: string, str2?: string) => {
   let index = -1;
+  if (typeof str1 !== 'string' || typeof str2 !== 'string') {
+    return index;
+  }
+
   const minLen = Math.min(str1.length, str2.length);
-  for (let i = 0; i < minLen; i++) {
+  for (let i = 0; i < minLen; ++i) {
     if (str1[i] === str2[i]) {
       index = i;
     } else {
@@ -100,17 +114,9 @@ const useViewModel = (props: StatusBoardProps) => {
       fixed: 'right',
     },
     {
-      title: 'Load',
-      dataIndex: 'load',
-      sorter: (a, b) => (a.load && b.load ? a.load - b.load : 0),
-      render: (load: number) => load,
-      width: '60px',
-      fixed: 'right',
-    },
-    {
       title: 'CPU(%)',
       dataIndex: 'cpu',
-      sorter: (a: { cpu: CpuStatus }, b: { cpu: CpuStatus }) => a.cpu.percentCPUUsage - b.cpu.percentCPUUsage,
+      sorter: (a, b) => a.cpu.percentCPUUsage - b.cpu.percentCPUUsage,
       render: (cpu: CpuStatus) => round(cpu.percentCPUUsage * 10, 2),
       width: '80px',
       fixed: 'right',
@@ -118,7 +124,7 @@ const useViewModel = (props: StatusBoardProps) => {
     {
       title: 'Working',
       dataIndex: 'memory',
-      sorter: (a: { memory: MemoryStats }, b: { memory: MemoryStats }) => a.memory.workingSetSize - b.memory.workingSetSize,
+      sorter: (a, b) => a.memory.workingSetSize - b.memory.workingSetSize,
       render: (memory: MemoryStats) => fileSize(memory.workingSetSize * 1024),
       width: '100px',
       fixed: 'right',
@@ -126,7 +132,7 @@ const useViewModel = (props: StatusBoardProps) => {
     {
       title: 'Peak',
       dataIndex: 'memory',
-      sorter: (a: { memory: MemoryStats }, b: { memory: MemoryStats }) => a.memory.peakWorkingSetSize - b.memory.peakWorkingSetSize,
+      sorter: (a, b) => a.memory.peakWorkingSetSize - b.memory.peakWorkingSetSize,
       render: (memory: MemoryStats) => fileSize(memory.peakWorkingSetSize * 1024),
       width: '100px',
       fixed: 'right',
@@ -140,7 +146,7 @@ const useViewModel = (props: StatusBoardProps) => {
     {
       title: 'Action',
       dataIndex: 'type',
-      width: '85px',
+      width: '90px',
       fixed: 'right',
       render: (type: string, item) => {
         const isDevtoolsSelf = !!item.webContentInfo?.url.startsWith('devtools://devtools');
@@ -211,7 +217,7 @@ export const StatusBoard = (props: StatusBoardProps) => {
         pagination={false}
         size="small"
         tableLayout="fixed"
-        rowKey={'pid'}
+        rowKey="pid"
         bordered={false}
         onRow={(record) => ({
           onClick: () => {
@@ -219,11 +225,7 @@ export const StatusBoard = (props: StatusBoardProps) => {
           },
         })}
       />
-      <BottomPanel
-        processInfo={selectedProcess}
-        ipcRenderer={props.ipcRenderer}
-        eventActionChannelName={props.eventActionChannelName}
-      />
+      <BottomPanel processInfo={selectedProcess} ipcRenderer={props.ipcRenderer} eventActionChannelName={props.eventActionChannelName} />
     </div>
   );
 };

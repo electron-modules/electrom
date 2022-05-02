@@ -16,9 +16,7 @@ export const WebContentsDetail = ({ processInfo, openDevTools }: WebContentsDeta
   return (
     <div className={style.wrapper}>
       <div>
-        <div className={style.info}>
-          id: {processInfo.webContentInfo.id} type: {processInfo.webContentInfo.type}
-        </div>
+        <div className={style.info}>{`id: ${processInfo.webContentInfo.id} type: ${processInfo.webContentInfo.type}`}</div>
         <div className={style.detail}>{processInfo.webContentInfo.url}</div>
       </div>
       <div className={style.control}>

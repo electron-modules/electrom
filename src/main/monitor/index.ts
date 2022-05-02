@@ -26,14 +26,12 @@ export class Monitor extends EventEmitter {
 
   constructor(options: MonitorOptions = {}) {
     super();
-    this.options = Object.assign(
-      {
-        threshold: 5e3,
-        dumpDir: null,
-        dumpThreshold: 10e3,
-      },
-      options,
-    );
+    this.options = {
+      threshold: 5e3,
+      dumpDir: null,
+      dumpThreshold: 10e3,
+      ...options,
+    };
   }
 
   stop() {
@@ -95,7 +93,7 @@ export class Monitor extends EventEmitter {
     });
 
     return app.getAppMetrics().map((appMetric) => {
-      const processDetail = pick(processMap.get(appMetric.pid), ['load', 'cmd']);
+      const processDetail = pick(processMap.get(appMetric.pid), ['cmd']);
       const webContentInfo = webContentInfos.find((webContentInfo) => webContentInfo.pid === appMetric.pid);
 
       return {
