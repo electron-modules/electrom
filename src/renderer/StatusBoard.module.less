@@ -2,6 +2,19 @@
   padding: 0;
   margin: 0;
 
+  .columnSelection {
+    line-height: 30px;
+    font-size: 14px;
+    padding: 10px;
+
+    label {
+      margin: 0 4px;
+    }
+    :global(.ant-switch) {
+      margin: 0 10px 4px 6px;
+    }
+  }
+
   :global(.ant-table) {
     table {
       font-size: 12px;
@@ -13,4 +26,12 @@
     padding-bottom: 3px !important;
   }
 
+  :global(.ant-tag-blue) {
+    max-width: 100px;
+    padding: 0 4px;
+    line-height: 16px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 }

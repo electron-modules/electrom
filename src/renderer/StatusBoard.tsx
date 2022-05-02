@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Button, Table } from 'antd';
+import { useState, useEffect, useMemo } from 'react';
+import { Button, Table, Tag, Switch } from 'antd';
 import fileSize from 'filesize';
 import { round } from 'lodash';
 import { ColumnsType } from 'antd/lib/table';
@@ -28,9 +28,15 @@ const useViewModel = (props: StatusBoardProps) => {
   const [data, setData] = useState<ProcessInfo[]>([]);
   const [processBaseIndex, setProcessBaseIndex] = useState(-1);
   const [selectedProcess, setSelectedProcess] = useState<ProcessInfo>();
+  const [showWebContent, setShowWebContent] = useState(true);
+  const [showAction, setShowAction] = useState(true);
 
   const openDevTools = (webContentInfo: ProcessInfo['webContentInfo']) => {
     ipcRenderer.send(props.eventActionChannelName, 'openDevTools', webContentInfo);
+  };
+
+  const killProcess = (item: ProcessInfo) => {
+    ipcRenderer.send(props.eventActionChannelName, 'killProcess', item);
   };
 
   const columns: ColumnsType<ProcessInfo> = [
@@ -87,26 +93,60 @@ const useViewModel = (props: StatusBoardProps) => {
       fixed: 'right',
     },
     {
+      title: 'WebContent',
+      dataIndex: 'webContentInfo',
+      width: '100px',
+      render: webContentInfo => {
+        if (!webContentInfo) return null;
+        let display = [];
+        try {
+          const urlObj = new URL(webContentInfo.url);
+          if (urlObj.hash) {
+            display.push(urlObj.hash);
+          }
+          if (urlObj.protocol) {
+            display.push(urlObj.protocol);
+          }
+        } catch (_) {}
+        return (
+          <>
+            <Tag color="blue">id:{webContentInfo.id}</Tag>
+            <Tag color="blue">type:{webContentInfo.type}</Tag>
+            {
+              display.map(item => <Tag color="blue">{item}</Tag>)
+            }
+          </>
+        );
+      },
+    },
+    {
       title: 'Action',
       dataIndex: 'type',
-      width: '90px',
-      fixed: 'right',
+      width: '120px',
       render: (type: string, item) => {
         const isDevtoolsSelf = !!item.webContentInfo?.url.startsWith('devtools://devtools');
-        if (type === 'Tab' && !isDevtoolsSelf) {
-          return (
+        return (
+          <>
+            {
+              type === 'Tab' && !isDevtoolsSelf ? 
+                <Button
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openDevTools(item.webContentInfo);
+                  }}
+                >
+                  devtool
+                </Button> : null
+            }
             <Button
               size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                openDevTools(item.webContentInfo);
-              }}
+              onClick={() => killProcess(item)}
             >
-              devtool
+              kill
             </Button>
-          );
-        }
-        return null;
+          </>
+        )
       },
     },
   ];
@@ -127,14 +167,30 @@ const useViewModel = (props: StatusBoardProps) => {
     };
   }, [ipcRenderer, props.eventDataChannelName]);
 
+  const selectedColumns = useMemo(() => {
+    return columns.filter(item => {
+      if (item.title === 'WebContent') {
+        return showWebContent;
+      }
+      if (item.title === 'Action') {
+        return showAction;
+      }
+      return true;
+    })
+  }, [showWebContent, showAction, processBaseIndex]);
+
   return {
     state: {
-      columns,
+      selectedColumns,
       data,
       selectedProcess,
+      showWebContent,
+      showAction,
     },
     actions: {
       setSelectedProcess,
+      setShowWebContent,
+      setShowAction,
     },
   };
 };
@@ -148,14 +204,24 @@ interface StatusBoardProps {
 
 export const StatusBoard = (props: StatusBoardProps) => {
   const {
-    state: { columns, data, selectedProcess },
-    actions: { setSelectedProcess },
+    state: { selectedColumns, data, selectedProcess, showWebContent, showAction },
+    actions: { setSelectedProcess, setShowWebContent, setShowAction },
   } = useViewModel(props);
 
   return (
     <div className={styles.wrapper}>
+      <div className={styles.columnSelection}>
+        <label>
+          WebContent
+          <Switch checked={showWebContent} onChange={setShowWebContent} />
+        </label>
+        <label>
+          Action
+          <Switch checked={showAction} onChange={setShowAction} />
+        </label>
+      </div>
       <Table
-        columns={columns}
+        columns={selectedColumns}
         dataSource={data}
         pagination={false}
         size="small"
