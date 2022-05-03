@@ -121,7 +121,7 @@ const useViewModel = (props: StatusBoardProps) => {
     {
       title: 'Action',
       dataIndex: 'type',
-      width: '56px',
+      width: '60px',
       render: (type: string, item) => {
         const isDevtoolsSelf = !!item.webContentInfo?.url.startsWith('devtools://devtools');
         return (
