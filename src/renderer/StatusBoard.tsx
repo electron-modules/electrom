@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, Tag, Tooltip } from 'antd';
+import { Table, Tooltip } from 'antd';
 import fileSize from 'filesize';
 import { round } from 'lodash';
 import { ColumnsType } from 'antd/lib/table';
@@ -42,7 +42,38 @@ const useViewModel = (props: StatusBoardProps) => {
     {
       title: 'Process',
       dataIndex: 'cmd',
-      render: (cmd: string) => findName(cmd, processBaseIndex),
+      render: (cmd: string, item) => {
+        const { webContentInfo } = item;
+        if (!webContentInfo) {
+          return <div>{findName(cmd, processBaseIndex)}</div>;
+        }
+        let display = [];
+        try {
+          const urlObj = new URL(webContentInfo.url);
+          if (urlObj.hash) {
+            display.push(urlObj.hash);
+          }
+          if (urlObj.protocol) {
+            display.push(
+              <Tooltip placement="bottom" title={webContentInfo.url}>
+                {urlObj.protocol}
+              </Tooltip>,
+            );
+          }
+        } catch (_) {}
+        return (
+          <>
+            <div>{findName(cmd, processBaseIndex)}</div>
+            <span className={styles.desc}>
+              <span>id:{webContentInfo.id}</span>
+              <span>type:{webContentInfo.type}</span>
+              {display.map((item) => (
+                <span>{item}</span>
+              ))}
+            </span>
+          </>
+        );
+      },
       fixed: 'right',
     },
     {
@@ -92,33 +123,6 @@ const useViewModel = (props: StatusBoardProps) => {
       fixed: 'right',
     },
     {
-      title: 'WebContent',
-      dataIndex: 'webContentInfo',
-      width: '100px',
-      render: webContentInfo => {
-        if (!webContentInfo) return null;
-        let display = [];
-        try {
-          const urlObj = new URL(webContentInfo.url);
-          if (urlObj.hash) {
-            display.push(urlObj.hash);
-          }
-          if (urlObj.protocol) {
-            display.push(<Tooltip title={webContentInfo.url}>{urlObj.protocol}</Tooltip>);
-          }
-        } catch (_) {}
-        return (
-          <>
-            <Tag color="blue">id:{webContentInfo.id}</Tag>
-            <Tag color="blue">type:{webContentInfo.type}</Tag>
-            {
-              display.map(item => <Tag color="blue">{item}</Tag>)
-            }
-          </>
-        );
-      },
-    },
-    {
       title: 'Action',
       dataIndex: 'type',
       width: '60px',
@@ -126,31 +130,26 @@ const useViewModel = (props: StatusBoardProps) => {
         const isDevtoolsSelf = !!item.webContentInfo?.url.startsWith('devtools://devtools');
         return (
           <>
-            <StopOutlined
-              title={`kill PID: ${item.pid}`}
-              onClick={() => killProcess(item)}
-            />
-            {
-              type === 'Tab' && !isDevtoolsSelf && (
-                <BugOutlined
+            <StopOutlined title={`kill PID: ${item.pid}`} onClick={() => killProcess(item)} />
+            {type === 'Tab' && !isDevtoolsSelf && (
+              <BugOutlined
                 title="debug"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openDevTools(item.webContentInfo);
-                  }}
-                  style={{ marginLeft: 8 }}
-                />
-              )
-            }
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openDevTools(item.webContentInfo);
+                }}
+                style={{ marginLeft: 8 }}
+              />
+            )}
           </>
-        )
+        );
       },
     },
   ];
 
   const updateAppMetrics = (_: any, appMetrics: any[]) => {
     const list = Array.isArray(appMetrics) ? appMetrics : [];
-    if ((list.length > MAX_COMMON_STRING_TEST) && !isWindows()) {
+    if (list.length > MAX_COMMON_STRING_TEST && !isWindows()) {
       setProcessBaseIndex(findCommonStringPlus(list.map((item) => item.cmd)));
     }
 
