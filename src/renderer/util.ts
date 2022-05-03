@@ -1,4 +1,4 @@
-export const isWindows = () => navigator.userAgent && navigator.userAgent.indexOf('Windows') >= 0;
+export const isWindows = () => window.navigator.platform.toLowerCase() === 'win32';
 
 // 提取双引号的内容
 const PROCESS_REGEX = /"?([^"]*)"?/;
