@@ -13,12 +13,17 @@
     padding-bottom: 3px !important;
   }
 
-  :global(.ant-tag-blue) {
+  .desc {
+    color: gray;
     max-width: 92px;
-    padding: 0 4px;
+    padding: 0 7px;
     line-height: 16px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+
+    :global(span) {
+      margin-left: 4px;
+    }
   }
 }
