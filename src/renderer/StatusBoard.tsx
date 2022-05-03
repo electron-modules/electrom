@@ -1,9 +1,10 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Button, Table, Tag, Switch } from 'antd';
+import { useState, useEffect } from 'react';
+import { Table, Tag, Tooltip } from 'antd';
 import fileSize from 'filesize';
 import { round } from 'lodash';
 import { ColumnsType } from 'antd/lib/table';
 import type { PreloadElectron } from 'src/common/window';
+import { StopOutlined, BugOutlined } from '@ant-design/icons';
 import { BottomPanel } from './components/BottomPanel';
 import { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from '../common/constants';
 
@@ -28,8 +29,6 @@ const useViewModel = (props: StatusBoardProps) => {
   const [data, setData] = useState<ProcessInfo[]>([]);
   const [processBaseIndex, setProcessBaseIndex] = useState(-1);
   const [selectedProcess, setSelectedProcess] = useState<ProcessInfo>();
-  const [showWebContent, setShowWebContent] = useState(true);
-  const [showAction, setShowAction] = useState(true);
 
   const openDevTools = (webContentInfo: ProcessInfo['webContentInfo']) => {
     ipcRenderer.send(props.eventActionChannelName, 'openDevTools', webContentInfo);
@@ -105,7 +104,7 @@ const useViewModel = (props: StatusBoardProps) => {
             display.push(urlObj.hash);
           }
           if (urlObj.protocol) {
-            display.push(urlObj.protocol);
+            display.push(<Tooltip title={webContentInfo.url}>{urlObj.protocol}</Tooltip>);
           }
         } catch (_) {}
         return (
@@ -122,29 +121,27 @@ const useViewModel = (props: StatusBoardProps) => {
     {
       title: 'Action',
       dataIndex: 'type',
-      width: '120px',
+      width: '60px',
       render: (type: string, item) => {
         const isDevtoolsSelf = !!item.webContentInfo?.url.startsWith('devtools://devtools');
         return (
           <>
+            <StopOutlined
+              title={`kill PID: ${item.pid}`}
+              onClick={() => killProcess(item)}
+            />
             {
-              type === 'Tab' && !isDevtoolsSelf ? 
-                <Button
-                  size="small"
+              type === 'Tab' && !isDevtoolsSelf && (
+                <BugOutlined
+                title="debug"
                   onClick={(e) => {
                     e.stopPropagation();
                     openDevTools(item.webContentInfo);
                   }}
-                >
-                  devtool
-                </Button> : null
+                  style={{ marginLeft: 8 }}
+                />
+              )
             }
-            <Button
-              size="small"
-              onClick={() => killProcess(item)}
-            >
-              kill
-            </Button>
           </>
         )
       },
@@ -167,30 +164,14 @@ const useViewModel = (props: StatusBoardProps) => {
     };
   }, [ipcRenderer, props.eventDataChannelName]);
 
-  const selectedColumns = useMemo(() => {
-    return columns.filter(item => {
-      if (item.title === 'WebContent') {
-        return showWebContent;
-      }
-      if (item.title === 'Action') {
-        return showAction;
-      }
-      return true;
-    })
-  }, [showWebContent, showAction, processBaseIndex]);
-
   return {
     state: {
-      selectedColumns,
+      columns,
       data,
       selectedProcess,
-      showWebContent,
-      showAction,
     },
     actions: {
       setSelectedProcess,
-      setShowWebContent,
-      setShowAction,
     },
   };
 };
@@ -204,24 +185,14 @@ interface StatusBoardProps {
 
 export const StatusBoard = (props: StatusBoardProps) => {
   const {
-    state: { selectedColumns, data, selectedProcess, showWebContent, showAction },
-    actions: { setSelectedProcess, setShowWebContent, setShowAction },
+    state: { columns, data, selectedProcess },
+    actions: { setSelectedProcess },
   } = useViewModel(props);
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.columnSelection}>
-        <label>
-          WebContent
-          <Switch checked={showWebContent} onChange={setShowWebContent} />
-        </label>
-        <label>
-          Action
-          <Switch checked={showAction} onChange={setShowAction} />
-        </label>
-      </div>
       <Table
-        columns={selectedColumns}
+        columns={columns}
         dataSource={data}
         pagination={false}
         size="small"
