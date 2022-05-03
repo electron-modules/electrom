@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Button, Table } from 'antd';
+import { Table, Tag, Tooltip } from 'antd';
 import fileSize from 'filesize';
 import { round } from 'lodash';
 import { ColumnsType } from 'antd/lib/table';
 import type { PreloadElectron } from 'src/common/window';
+import { StopOutlined, BugOutlined } from '@ant-design/icons';
 import { BottomPanel } from './components/BottomPanel';
 import { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from '../common/constants';
 
@@ -31,6 +32,10 @@ const useViewModel = (props: StatusBoardProps) => {
 
   const openDevTools = (webContentInfo: ProcessInfo['webContentInfo']) => {
     ipcRenderer.send(props.eventActionChannelName, 'openDevTools', webContentInfo);
+  };
+
+  const killProcess = (item: ProcessInfo) => {
+    ipcRenderer.send(props.eventActionChannelName, 'killProcess', item);
   };
 
   const columns: ColumnsType<ProcessInfo> = [
@@ -87,26 +92,58 @@ const useViewModel = (props: StatusBoardProps) => {
       fixed: 'right',
     },
     {
+      title: 'WebContent',
+      dataIndex: 'webContentInfo',
+      width: '100px',
+      render: webContentInfo => {
+        if (!webContentInfo) return null;
+        let display = [];
+        try {
+          const urlObj = new URL(webContentInfo.url);
+          if (urlObj.hash) {
+            display.push(urlObj.hash);
+          }
+          if (urlObj.protocol) {
+            display.push(<Tooltip title={webContentInfo.url}>{urlObj.protocol}</Tooltip>);
+          }
+        } catch (_) {}
+        return (
+          <>
+            <Tag color="blue">id:{webContentInfo.id}</Tag>
+            <Tag color="blue">type:{webContentInfo.type}</Tag>
+            {
+              display.map(item => <Tag color="blue">{item}</Tag>)
+            }
+          </>
+        );
+      },
+    },
+    {
       title: 'Action',
       dataIndex: 'type',
-      width: '90px',
-      fixed: 'right',
+      width: '60px',
       render: (type: string, item) => {
         const isDevtoolsSelf = !!item.webContentInfo?.url.startsWith('devtools://devtools');
-        if (type === 'Tab' && !isDevtoolsSelf) {
-          return (
-            <Button
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                openDevTools(item.webContentInfo);
-              }}
-            >
-              devtool
-            </Button>
-          );
-        }
-        return null;
+        return (
+          <>
+            <StopOutlined
+              title={`kill PID: ${item.pid}`}
+              onClick={() => killProcess(item)}
+            />
+            {
+              type === 'Tab' && !isDevtoolsSelf && (
+                <BugOutlined
+                title="debug"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openDevTools(item.webContentInfo);
+                  }}
+                  style={{ marginLeft: 8 }}
+                />
+              )
+            }
+          </>
+        )
       },
     },
   ];
