@@ -103,6 +103,7 @@ function parsePsOutput(stdout: string, addToTree: (pid: number, ppid: number, cm
 type WindowsProcess = { pid: number; cmd: string } | null;
 
 const getWindowsPsCodeWithChild = (rootPid: number) => `
+$OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding;
 function Get-ChildProcesses ($ParentProcessId) {
     $filter = "parentprocessid = '$($ParentProcessId)'"
     Get-CIMInstance -ClassName Win32_Process -filter $filter | Foreach-Object {
@@ -127,24 +128,25 @@ function getWindowsProcessList(rootPid: number) {
   };
 
   const processListPromise = new Promise<WindowsProcess[]>((resolve, reject) => {
-    exec(
-      `Get-CIMInstance -ClassName win32_process -filter "processid = ${rootPid}" | Select ProcessId, CommandLine | out-string -Width 1000`,
-      { shell: 'powershell.exe' },
-      (error, stdout, stderr) => {
-        if (error) {
-          reject(error);
-        }
+    exec(`
+      $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding;
+      Get-CIMInstance -ClassName win32_process -filter "processid = ${rootPid}" | Select ProcessId, CommandLine | out-string -Width 1000`,
+    { shell: 'powershell.exe' },
+    (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+      }
 
-        if (stderr) {
-          console.error(stderr);
-        }
+      if (stderr) {
+        console.error(stderr);
+      }
 
-        try {
-          resolve(outputFormatter(stdout));
-        } catch (parseError) {
-          reject(parseError);
-        }
-      },
+      try {
+        resolve(outputFormatter(stdout));
+      } catch (parseError) {
+        reject(parseError);
+      }
+    },
     );
   });
 
