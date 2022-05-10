@@ -26,12 +26,6 @@ module.exports = {
         type: 'javascript/auto',
       },
       {
-        test: /\.json$/,
-        loader: 'json-loader',
-        type: 'javascript/auto',
-        exclude: /node_modules/,
-      },
-      {
         test: /\.less$/,
         include: /node_modules/,
         use: [

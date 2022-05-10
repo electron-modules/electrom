@@ -24,6 +24,21 @@ interface CpuStatus {
 // 测试共同字符串数量
 const MAX_COMMON_STRING_TEST = 3;
 
+const Footer = (props: { openExternal: (arg0: any) => void }) => {
+  return (
+    <footer>
+      <a
+        onClick={e => {
+          e.preventDefault();
+          props.openExternal('https://github.com/electron-modules/electrom');
+        }}
+      >
+        Electrom
+      </a>
+    </footer>
+  );
+};
+
 const useViewModel = (props: StatusBoardProps) => {
   const { ipcRenderer } = props;
   const [data, setData] = useState<ProcessInfo[]>([]);
@@ -156,10 +171,18 @@ const useViewModel = (props: StatusBoardProps) => {
     setData(list);
   };
 
+  const onClickBlank = (e: any) => {
+    if (e.target.nodeName === 'BODY') {
+      setSelectedProcess(undefined);
+    }
+  };
+
   useEffect(() => {
     ipcRenderer.on(props.eventDataChannelName, updateAppMetrics);
+    document.body.addEventListener('click', onClickBlank, false);
     return () => {
       ipcRenderer.removeListener(props.eventDataChannelName, updateAppMetrics);
+      document.body.removeEventListener('click', onClickBlank);
     };
   }, [ipcRenderer, props.eventDataChannelName]);
 
@@ -199,12 +222,11 @@ export const StatusBoard = (props: StatusBoardProps) => {
         rowKey="pid"
         bordered={false}
         onRow={(record) => ({
-          onClick: () => {
-            setSelectedProcess(record);
-          },
+          onClick: () => setSelectedProcess(record),
         })}
       />
       <BottomPanel processInfo={selectedProcess} ipcRenderer={props.ipcRenderer} eventActionChannelName={props.eventActionChannelName} />
+      <Footer openExternal={props.shell.openExternal} />
     </div>
   );
 };
