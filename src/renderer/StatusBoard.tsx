@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Table, Tooltip } from 'antd';
 import fileSize from 'filesize';
-import { round } from 'lodash';
+import { round, capitalize } from 'lodash';
 import { ColumnsType } from 'antd/lib/table';
 import type { PreloadElectron } from 'src/common/window';
 import { StopOutlined, BugOutlined } from '@ant-design/icons';
@@ -11,6 +11,7 @@ import { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from '../common/co
 import styles from './StatusBoard.module.less';
 import type { ProcessInfo } from '../common/interface';
 import { findCommonStringPlus, findName, isWindows } from './util';
+import pkg from '../../package.json';
 
 interface MemoryStats {
   workingSetSize: number;
@@ -23,6 +24,24 @@ interface CpuStatus {
 
 // 测试共同字符串数量
 const MAX_COMMON_STRING_TEST = 3;
+
+const Footer = (props: { openExternal: (arg0: any) => void; }) => {
+  const { name, version, repository } = pkg;
+  return (
+    <footer>
+      <Tooltip title={`version: ${version}`}>
+        <a
+          onClick={e => {
+            e.preventDefault();
+            props.openExternal(repository.url);
+          }}
+        >
+          {capitalize(name)}
+        </a>
+      </Tooltip>
+    </footer>
+  );
+};
 
 const useViewModel = (props: StatusBoardProps) => {
   const { ipcRenderer } = props;
@@ -156,10 +175,18 @@ const useViewModel = (props: StatusBoardProps) => {
     setData(list);
   };
 
+  const onClickBlank = (e: any) => {
+    if (e.target.nodeName === 'BODY') {
+      setSelectedProcess(undefined);
+    }
+  };
+
   useEffect(() => {
     ipcRenderer.on(props.eventDataChannelName, updateAppMetrics);
+    document.body.addEventListener('click', onClickBlank, false);
     return () => {
       ipcRenderer.removeListener(props.eventDataChannelName, updateAppMetrics);
+      document.body.removeEventListener('click', onClickBlank);
     };
   }, [ipcRenderer, props.eventDataChannelName]);
 
@@ -199,12 +226,11 @@ export const StatusBoard = (props: StatusBoardProps) => {
         rowKey="pid"
         bordered={false}
         onRow={(record) => ({
-          onClick: () => {
-            setSelectedProcess(record);
-          },
+          onClick: () => setSelectedProcess(record),
         })}
       />
       <BottomPanel processInfo={selectedProcess} ipcRenderer={props.ipcRenderer} eventActionChannelName={props.eventActionChannelName} />
+      <Footer openExternal={props.shell.openExternal} />
     </div>
   );
 };
