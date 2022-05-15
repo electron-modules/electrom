@@ -1,6 +1,6 @@
 {
   "name": "electrom",
-  "version": "17.2.15",
+  "version": "18.0.0",
   "description": "Electrom is a resource management solution for Electron applications, which is convenient for performance management and friendly debugging of multiple windows",
   "scripts": {
     "build": "tsc && copyup src/**/*.html lib/",
@@ -50,8 +50,8 @@
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "css-loader": "^0.28.8",
-    "electron": "17",
-    "electron-windows": "17",
+    "electron": "18",
+    "electron-windows": "18",
     "eslint": "^7.32.0",
     "git-contributor": "*",
     "husky": "^7.0.4",
