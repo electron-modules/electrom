@@ -53,7 +53,7 @@ export class Monitor extends EventEmitter {
    * 发送新的数据到前端
    */
   async refreshData() {
-    const data = await this.getAppMetrics();
+    const data = await this.getAppMetricsAndProcess();
     this.dump(data);
     this.emit(EVENT_DATA_CHANNEL_NAME, data);
   }
@@ -79,9 +79,6 @@ export class Monitor extends EventEmitter {
   }
 
   async getAppMetrics() {
-    const rootPid = process.pid;
-    const processMap = await listProcesses(rootPid);
-
     const allWebContents = webContents.getAllWebContents();
     const webContentInfos = allWebContents.map((webContentInfo) => {
       return {
@@ -93,13 +90,26 @@ export class Monitor extends EventEmitter {
     });
 
     return app.getAppMetrics().map((appMetric) => {
-      const processDetail = pick(processMap.get(appMetric.pid), ['cmd']);
       const webContentInfo = webContentInfos.find((webContentInfo) => webContentInfo.pid === appMetric.pid);
 
       return {
         ...appMetric,
-        ...processDetail,
         webContentInfo,
+      };
+    });
+  }
+  async getAppMetricsAndProcess() {
+    const rootPid = process.pid;
+    const processMap = await listProcesses(rootPid);
+
+    const appMetrics = await this.getAppMetrics();
+
+    return appMetrics.map((appMetric) => {
+      const processDetail = pick(processMap.get(appMetric.pid), ['cmd']);
+
+      return {
+        ...appMetric,
+        ...processDetail
       };
     });
   }
