@@ -1,6 +1,6 @@
 {
   "name": "electrom",
-  "version": "18.0.5",
+  "version": "18.0.6",
   "description": "Electrom is a resource management solution for Electron applications, which is convenient for performance management and friendly debugging of multiple windows",
   "scripts": {
     "build": "tsc && copyup 'src/**/*.html' lib/ && copyup 'src/**/*.less' lib/",
@@ -26,7 +26,11 @@
     "lib/main/coverage/reporter.html",
     "lib/main/monitor/reporter.template.html",
     "lib/renderer/**/*.js",
-    "lib/renderer/**/*.d.ts"
+    "lib/renderer/**/*.d.ts",
+    "lib/renderer/**/*.less",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.less"
   ],
   "repository": {
     "type": "git",
