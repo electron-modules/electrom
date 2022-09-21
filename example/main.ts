@@ -2,7 +2,7 @@ import url from 'url';
 import path from 'path';
 import WindowManager from 'electron-windows';
 import { app } from 'electron';
-import waitPort from 'wait-port';
+import { waitPort } from 'detect-port';
 import { Monitor, PerfTracing, EVENT_ACTION_CHANNEL_NAME, EVENT_DATA_CHANNEL_NAME } from '../src/main';
 
 const monitor = new Monitor();
@@ -18,7 +18,7 @@ const mainUrl = url.format({
 
 app.on('ready', async () => {
   // wait for the port 8000 to be ready
-  await waitPort({ host: 'localhost', port: 8080 });
+  await waitPort(8080);
 
   const windowManager = new WindowManager();
   const win = windowManager.create({

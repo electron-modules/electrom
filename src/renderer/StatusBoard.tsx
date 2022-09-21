@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Table, Tooltip } from 'antd';
 import fileSize from 'filesize';
-import { round } from 'lodash';
+import { round, sumBy } from 'lodash';
 import { ColumnsType } from 'antd/lib/table';
 import type { PreloadElectron } from 'src/common/window';
 import { StopOutlined, BugOutlined } from '@ant-design/icons';
@@ -52,6 +52,17 @@ const useViewModel = (props: StatusBoardProps) => {
   const killProcess = (item: ProcessInfo) => {
     ipcRenderer.send(props.eventActionChannelName, 'killProcess', item);
   };
+
+  function getTotalMemorySize(_data: ProcessInfo[], key: String) {
+    // @ts-ignore
+    const total = sumBy(_data, item => item.memory[key]);
+    return fileSize(total * 1024);
+  }
+
+  function getTotalCPU(_data: ProcessInfo[]) {
+    const total = sumBy(_data, item => item.cpu.percentCPUUsage);
+    return round(total * 10, 2);
+  }
 
   const columns: ColumnsType<ProcessInfo> = [
     {
@@ -108,7 +119,14 @@ const useViewModel = (props: StatusBoardProps) => {
       fixed: 'right',
     },
     {
-      title: 'CPU(%)',
+      title: (
+        <div className={styles.columnTitle}>
+          CPU
+          <div className={styles.value}>
+            {getTotalCPU(data)}%
+          </div>
+        </div>
+      ),
       dataIndex: 'cpu',
       sorter: (a, b) => a.cpu.percentCPUUsage - b.cpu.percentCPUUsage,
       render: (cpu: CpuStatus) => round(cpu.percentCPUUsage * 10, 2),
@@ -116,7 +134,14 @@ const useViewModel = (props: StatusBoardProps) => {
       fixed: 'right',
     },
     {
-      title: 'Working',
+      title: (
+        <div className={styles.columnTitle}>
+          Working
+          <div className={styles.value}>
+            {getTotalMemorySize(data, 'workingSetSize')}
+          </div>
+        </div>
+      ),
       dataIndex: 'memory',
       sorter: (a, b) => a.memory.workingSetSize - b.memory.workingSetSize,
       render: (memory: MemoryStats) => fileSize(memory.workingSetSize * 1024),
@@ -124,7 +149,14 @@ const useViewModel = (props: StatusBoardProps) => {
       fixed: 'right',
     },
     {
-      title: 'Peak',
+      title: (
+        <div className={styles.columnTitle}>
+          Peak
+          <div className={styles.value}>
+            {getTotalMemorySize(data, 'peakWorkingSetSize')}
+          </div>
+        </div>
+      ),
       dataIndex: 'memory',
       sorter: (a, b) => a.memory.peakWorkingSetSize - b.memory.peakWorkingSetSize,
       render: (memory: MemoryStats) => fileSize(memory.peakWorkingSetSize * 1024),

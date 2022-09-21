@@ -109,7 +109,7 @@ export class Monitor extends EventEmitter {
 
       return {
         ...appMetric,
-        ...processDetail
+        ...processDetail,
       };
     });
   }
