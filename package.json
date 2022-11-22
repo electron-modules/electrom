@@ -1,14 +1,15 @@
 {
   "name": "electrom",
-  "version": "18.1.1",
+  "version": "19.0.6",
   "description": "Electrom is a resource management solution for Electron applications, which is convenient for performance management and friendly debugging of multiple windows",
   "scripts": {
-    "build": "tsc && copyup 'src/**/*.html' lib/ && copyup 'src/**/*.less' lib/",
+    "build": "sh ./build.sh",
+    "build:web": "cross-env NODE_ENV=production webpack",
     "dev": "concurrently npm:dev:*",
     "dev:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only ./example/main.ts",
     "dev:web": "cross-env NODE_ENV=development webpack-dev-server",
     "test": "jest",
-    "lint": "eslint --fix --quiet --ext .js,.jsx,.ts,.tsx ./src",
+    "lint": "eslint --fix --quiet --ext .js,.jsx ./src",
     "prepublishOnly": "npm run build",
     "contributor": "git-contributor"
   },
@@ -19,6 +20,8 @@
     "ps"
   ],
   "files": [
+    "dist/**/*.js",
+    "dist/**/*.html",
     "lib/common/**/*.js",
     "lib/common/**/*.d.ts",
     "lib/main/**/*.js",
@@ -56,11 +59,13 @@
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "css-loader": "^0.28.8",
+    "css-minimizer-webpack-plugin": "^4.2.2",
     "detect-port": "1",
     "electron": "18",
     "electron-windows": "18",
     "eslint": "^7.32.0",
     "git-contributor": "*",
+    "html-webpack-plugin": "^5.5.0",
     "husky": "^7.0.4",
     "jest": "^26.6.3",
     "json-loader": "^0.5.7",
@@ -76,7 +81,7 @@
     "ts-loader": "^9.2.8",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.3",
-    "webpack": "^5.74.0",
+    "webpack": "^5.75.0",
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.10.1"
   },

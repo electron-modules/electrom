@@ -1,24 +1,34 @@
 import url from 'url';
-import path from 'path';
 import WindowManager from 'electron-windows';
 import { app } from 'electron';
 import { waitPort } from 'detect-port';
-import { Monitor, PerfTracing, EVENT_ACTION_CHANNEL_NAME, EVENT_DATA_CHANNEL_NAME } from '../src/main';
+import pkg from '../package.json';
+import {
+  Monitor,
+  // PerfTracing,
+  EVENT_ACTION_CHANNEL_NAME, EVENT_DATA_CHANNEL_NAME,
+  BROWSER_WINDOW_PRELOAD_PATH,
+} from '../src/main';
 
-const monitor = new Monitor();
+const webpackPort = 8080;
 
-const mainUrl = url.format({
-  pathname: path.join(__dirname, 'renderer', 'index.html'),
-  protocol: 'file:',
-  query: {
-    EVENT_DATA_CHANNEL_NAME,
-    EVENT_ACTION_CHANNEL_NAME,
-  },
-});
+function getMainUrl() {
+  return url.format({
+    protocol: 'http:',
+    hostname: 'localhost',
+    pathname: 'index.html',
+    port: webpackPort,
+    query: {
+      EVENT_DATA_CHANNEL_NAME,
+      EVENT_ACTION_CHANNEL_NAME,
+    },
+  });
+}
 
 app.on('ready', async () => {
-  // wait for the port 8000 to be ready
-  await waitPort(8080);
+  await waitPort(webpackPort);
+
+  const monitor = new Monitor();
 
   const windowManager = new WindowManager();
   const win = windowManager.create({
@@ -26,14 +36,17 @@ app.on('ready', async () => {
     browserWindow: {
       width: 1280,
       height: 800,
-      title: 'electrom',
+      title: pkg.name,
       show: false,
       acceptFirstMouse: true,
       webPreferences: {
-        preload: path.join(__dirname, 'renderer', 'preload.js'),
+        preload: BROWSER_WINDOW_PRELOAD_PATH,
       },
     },
   });
+
+  const mainUrl = getMainUrl();
+  console.log('load url: %s', mainUrl);
 
   win.loadURL(mainUrl);
   win.webContents.openDevTools({ mode: 'detach' });
@@ -48,16 +61,16 @@ app.on('ready', async () => {
     win.show();
   });
 
-  PerfTracing({
-    dumpTargetDir: path.join(process.cwd(), '.electrom'),
-    partitionThreshold: 30e3,
-    memoryDumpConfig: {
-      triggers: [
-        {
-          mode: 'light',
-          periodic_interval_ms: 10e3,
-        },
-      ],
-    },
-  });
+  // PerfTracing({
+  //   dumpTargetDir: path.join(process.cwd(), '.electrom'),
+  //   partitionThreshold: 30e3,
+  //   memoryDumpConfig: {
+  //     triggers: [
+  //       {
+  //         mode: 'light',
+  //         periodic_interval_ms: 10e3,
+  //       },
+  //     ],
+  //   },
+  // });
 });

@@ -2,11 +2,15 @@ import { useState } from 'react';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 import { PreloadElectron } from '../../src/common/window';
-import { StatusBoard, PerfBoard, EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from '../../src/renderer';
+import {
+  StatusBoard, PerfBoard,
+  EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME,
+  IPC_BRIDAGE_NAME,
+} from '../../src/renderer';
 
 import 'antd/dist/antd.css';
 
-import styles from './index.module.less';
+import styles from './App.module.less';
 
 declare global {
   interface Window {
@@ -14,12 +18,19 @@ declare global {
   }
 }
 
-const container = document.querySelector('#app');
+function getBridge() {
+  const params = new URLSearchParams(location.search);
+  const bridgeNameSpace = params.get('IPC_BRIDGE_NAME');
+  // @ts-ignore
+  return window[bridgeNameSpace || IPC_BRIDAGE_NAME]
+}
 
-const { ipcRenderer, shell } = window.electron;
+const container = document.querySelector('#app');
 
 const App = () => {
   const [display, setDisplay] = useState(true);
+  const { ipcRenderer, shell } = getBridge();
+  if (!ipcRenderer) return null;
   return (
     <>
       <StatusBoard

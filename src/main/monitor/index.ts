@@ -1,5 +1,5 @@
 import { pick } from 'lodash';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { promises as fs } from 'fs';
 import { EventEmitter } from 'events';
 import { app, BrowserWindow, webContents } from 'electron';
@@ -10,6 +10,9 @@ import { ProcessInfo } from '../../common/interface';
 
 export * from './reporter';
 export * from '../../common/constants';
+
+export const BROWSER_WINDOW_PRELOAD_PATH = resolve(__dirname, 'preload.js');
+export const BROWSER_WINDOW_ASSETS_PATH = resolve(__dirname, '..', '..', '..', 'dist', 'index.html');
 
 interface MonitorOptions {
   threshold?: number;
@@ -132,3 +135,4 @@ export class Monitor extends EventEmitter {
     });
   }
 }
+
