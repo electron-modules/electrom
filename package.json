@@ -1,6 +1,6 @@
 {
   "name": "electrom",
-  "version": "19.0.4",
+  "version": "19.0.5",
   "description": "Electrom is a resource management solution for Electron applications, which is convenient for performance management and friendly debugging of multiple windows",
   "scripts": {
     "build": "sh ./build.sh",

@@ -11,6 +11,9 @@ import { ProcessInfo } from '../../common/interface';
 export * from './reporter';
 export * from '../../common/constants';
 
+export const BROWSER_WINDOW_PRELOAD_PATH = resolve(__dirname, 'preload.js');
+export const BROWSER_WINDOW_ASSETS_PATH = resolve(__dirname, '..', '..', '..', 'dist', 'index.html');
+
 interface MonitorOptions {
   threshold?: number;
   dumpDir?: string | null;
@@ -23,9 +26,6 @@ export class Monitor extends EventEmitter {
   _timer?: ReturnType<typeof setTimeout>;
 
   _latestDumpTimeStamp?: number;
-
-  static BROWSER_WINDOW_PRELOAD_PATH = resolve(__dirname, 'preload.js');
-  static BROWSER_WINDOW_MONITOR_ASSETS_PATH = resolve(__dirname, '..', '..', '..', 'dist', 'index.html');
 
   constructor(options: MonitorOptions = {}) {
     super();

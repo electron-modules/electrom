@@ -1,18 +1,19 @@
 import url from 'url';
-import path from 'path';
 import WindowManager from 'electron-windows';
 import { app } from 'electron';
 import { waitPort } from 'detect-port';
 import pkg from '../package.json';
 import {
-  Monitor, PerfTracing,
+  Monitor,
+  // PerfTracing,
   EVENT_ACTION_CHANNEL_NAME, EVENT_DATA_CHANNEL_NAME,
+  BROWSER_WINDOW_PRELOAD_PATH,
 } from '../src/main';
 
 const webpackPort = 8080;
 
 function getMainUrl() {
-  const mainUrl = url.format({
+  return url.format({
     protocol: 'http:',
     hostname: 'localhost',
     pathname: 'index.html',
@@ -22,7 +23,6 @@ function getMainUrl() {
       EVENT_ACTION_CHANNEL_NAME,
     },
   });
-  return mainUrl;
 }
 
 app.on('ready', async () => {
@@ -40,7 +40,7 @@ app.on('ready', async () => {
       show: false,
       acceptFirstMouse: true,
       webPreferences: {
-        preload: path.join(__dirname, 'preload.js'),
+        preload: BROWSER_WINDOW_PRELOAD_PATH,
       },
     },
   });
@@ -61,16 +61,16 @@ app.on('ready', async () => {
     win.show();
   });
 
-  PerfTracing({
-    dumpTargetDir: path.join(process.cwd(), '.electrom'),
-    partitionThreshold: 30e3,
-    memoryDumpConfig: {
-      triggers: [
-        {
-          mode: 'light',
-          periodic_interval_ms: 10e3,
-        },
-      ],
-    },
-  });
+  // PerfTracing({
+  //   dumpTargetDir: path.join(process.cwd(), '.electrom'),
+  //   partitionThreshold: 30e3,
+  //   memoryDumpConfig: {
+  //     triggers: [
+  //       {
+  //         mode: 'light',
+  //         periodic_interval_ms: 10e3,
+  //       },
+  //     ],
+  //   },
+  // });
 });

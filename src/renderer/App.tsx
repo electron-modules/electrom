@@ -2,7 +2,11 @@ import { useState } from 'react';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 import { PreloadElectron } from '../../src/common/window';
-import { StatusBoard, PerfBoard, EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from '../../src/renderer';
+import {
+  StatusBoard, PerfBoard,
+  EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME,
+  IPC_BRIDAGE_NAME,
+} from '../../src/renderer';
 
 import 'antd/dist/antd.css';
 
@@ -14,14 +18,18 @@ declare global {
   }
 }
 
+function getBridge() {
+  const params = new URLSearchParams(location.search);
+  const bridgeNameSpace = params.get('IPC_BRIDGE_NAME');
+  // @ts-ignore
+  return window[bridgeNameSpace || IPC_BRIDAGE_NAME]
+}
+
 const container = document.querySelector('#app');
-const params = new URLSearchParams(location.search);
-const nameSpace = params.get('ELECTROM_MONITOR_BRIDAGE_NAME');
 
 const App = () => {
   const [display, setDisplay] = useState(true);
-  // @ts-ignore
-  const { ipcRenderer, shell } = window[nameSpace || 'electron'];
+  const { ipcRenderer, shell } = getBridge();
   if (!ipcRenderer) return null;
   return (
     <>
