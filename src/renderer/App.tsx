@@ -6,7 +6,7 @@ import { StatusBoard, PerfBoard, EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_N
 
 import 'antd/dist/antd.css';
 
-import styles from './index.module.less';
+import styles from './App.module.less';
 
 declare global {
   interface Window {

@@ -60,20 +60,6 @@ mainWindow.webContents.on('dom-ready', () => {
 });
 ```
 
-```javascript
-// renderer process: import electrom renderer
-import { StatusBoard, PerfBoard, EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from 'electrom/renderer';
-
-const { ipcRenderer, shell } = window.electron;
-
-<StatusBoard
-  eventDataChannelName={EVENT_DATA_CHANNEL_NAME}
-  eventActionChannelName={EVENT_ACTION_CHANNEL_NAME}
-  ipcRenderer={ipcRenderer}
-  shell={shell}
-/>
-```
-
 ## preload file
 
 ```javascript
@@ -94,25 +80,6 @@ contextBridge.exposeInMainWorld(
 ```
 
 Please set this script's path as `webPreferences.preload` of `BrowserWindow`.
-
-## Status Board
-
-```javascript
-import React from 'react';
-import StatusBoard from 'electrom/src/StatusBoard';
-import { ipcRenderer, shell } from 'electron';
-
-function() {
-  return (
-    <StatusBoard
-      eventDataChannelName="electrom:monitor:data"
-      eventActionChannelName="electrom:monitor:action"
-      ipcRenderer={ipcRenderer}
-      shell={shell}
-    />
-  );
-}
-```
 
 ## Perf Board
 

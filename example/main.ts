@@ -3,22 +3,32 @@ import path from 'path';
 import WindowManager from 'electron-windows';
 import { app } from 'electron';
 import { waitPort } from 'detect-port';
-import { Monitor, PerfTracing, EVENT_ACTION_CHANNEL_NAME, EVENT_DATA_CHANNEL_NAME } from '../src/main';
+import pkg from '../package.json';
+import {
+  Monitor, PerfTracing,
+  EVENT_ACTION_CHANNEL_NAME, EVENT_DATA_CHANNEL_NAME,
+} from '../src/main';
 
-const monitor = new Monitor();
+const webpackPort = 8080;
 
-const mainUrl = url.format({
-  pathname: path.join(__dirname, 'renderer', 'index.html'),
-  protocol: 'file:',
-  query: {
-    EVENT_DATA_CHANNEL_NAME,
-    EVENT_ACTION_CHANNEL_NAME,
-  },
-});
+function getMainUrl() {
+  const mainUrl = url.format({
+    protocol: 'http:',
+    hostname: 'localhost',
+    pathname: 'index.html',
+    port: webpackPort,
+    query: {
+      EVENT_DATA_CHANNEL_NAME,
+      EVENT_ACTION_CHANNEL_NAME,
+    },
+  });
+  return mainUrl;
+}
 
 app.on('ready', async () => {
-  // wait for the port 8000 to be ready
-  await waitPort(8080);
+  await waitPort(webpackPort);
+
+  const monitor = new Monitor();
 
   const windowManager = new WindowManager();
   const win = windowManager.create({
@@ -26,14 +36,17 @@ app.on('ready', async () => {
     browserWindow: {
       width: 1280,
       height: 800,
-      title: 'electrom',
+      title: pkg.name,
       show: false,
       acceptFirstMouse: true,
       webPreferences: {
-        preload: path.join(__dirname, 'renderer', 'preload.js'),
+        preload: path.join(__dirname, 'preload.js'),
       },
     },
   });
+
+  const mainUrl = getMainUrl();
+  console.log('load url: %s', mainUrl);
 
   win.loadURL(mainUrl);
   win.webContents.openDevTools({ mode: 'detach' });
