@@ -1,5 +1,5 @@
 import { pick } from 'lodash';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { promises as fs } from 'fs';
 import { EventEmitter } from 'events';
 import { app, BrowserWindow, webContents } from 'electron';
@@ -23,6 +23,9 @@ export class Monitor extends EventEmitter {
   _timer?: ReturnType<typeof setTimeout>;
 
   _latestDumpTimeStamp?: number;
+
+  static BROWSER_WINDOW_PRELOAD_PATH = resolve(__dirname, 'preload.js');
+  static BROWSER_WINDOW_MONITOR_ASSETS_PATH = resolve(__dirname, '..', '..', '..', 'dist', 'index.html');
 
   constructor(options: MonitorOptions = {}) {
     super();
@@ -132,3 +135,4 @@ export class Monitor extends EventEmitter {
     });
   }
 }
+

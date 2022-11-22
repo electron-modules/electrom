@@ -15,11 +15,14 @@ declare global {
 }
 
 const container = document.querySelector('#app');
-
-const { ipcRenderer, shell } = window.electron;
+const params = new URLSearchParams(location.search);
+const nameSpace = params.get('ELECTROM_MONITOR_BRIDAGE_NAME');
 
 const App = () => {
   const [display, setDisplay] = useState(true);
+  // @ts-ignore
+  const { ipcRenderer, shell } = window[nameSpace || 'electron'];
+  if (!ipcRenderer) return null;
   return (
     <>
       <StatusBoard
