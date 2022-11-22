@@ -39,18 +39,25 @@ This project follows the git-contributor [spec](https://github.com/xudafeng/git-
 npm i electrom --save-dev
 ```
 
-## Usage
-```shell
-npm run dev
-```
+## How to use
 
-## APIs
+Please visit the demo code: [./example/main.ts](./example/main.ts)
 
 ```typescript
 // main process: import electrom
-import { EVENT_DATA_CHANNEL_NAME, Monitor } from 'electrom';
+import {
+  EVENT_DATA_CHANNEL_NAME,
+  BROWSER_WINDOW_PRELOAD_PATH,
+  Monitor,
+} from 'electrom';
 
 const monitor = new Monitor();
+/**
+ * Please set this script's path as `webPreferences.preload` of `BrowserWindow`.
+ * {
+ *   preload: BROWSER_WINDOW_PRELOAD_PATH
+ * }
+ */
 mainWindow.webContents.on('dom-ready', () => {
   monitor.on(EVENT_DATA_CHANNEL_NAME, (data: any) => {
     mainWindow.webContents.send(EVENT_DATA_CHANNEL_NAME, data);
@@ -60,28 +67,9 @@ mainWindow.webContents.on('dom-ready', () => {
 });
 ```
 
-## preload file
-
-```javascript
-'use strict';
-
-const { contextBridge, ipcRenderer } = require('electron');
-
-contextBridge.exposeInMainWorld(
-  'electron',
-  {
-    ipcRenderer: {
-      send: (channel, ...args) => ipcRenderer.send(channel, ...args),
-      on: (channel, listener) => ipcRenderer.on(channel, listener),
-      removeListener: (channel, listener) => ipcRenderer.removeListener(channel, listener),
-    },
-  }
-)
-```
-
-Please set this script's path as `webPreferences.preload` of `BrowserWindow`.
-
 ## Perf Board
+
+You can use the Perf-Board standalone in your front-end.
 
 ```javascript
 import React from 'react';
