@@ -12,10 +12,7 @@ import { ProcessInfo } from '../../common/interface';
 export * from './reporter';
 export * from '../../common/constants';
 
-export const BROWSER_WINDOW_PRELOAD_PATH = url.format({
-  pathname: path.resolve(__dirname, 'preload.js'),
-  protocol: 'file:',
-});
+export const BROWSER_WINDOW_PRELOAD_PATH = path.resolve(__dirname, 'preload.js');
 
 export const BROWSER_WINDOW_ASSETS_PATH = url.format({
   pathname: path.resolve(__dirname, '..', '..', '..', 'dist', 'index.html'),
