@@ -42,8 +42,9 @@ npm i electrom --save-dev
 ## How to use
 
 Please visit the demo code
-0. [./example/main.ts](./example/main.ts)
-0. [electron-modules/electron-windows/blob/master/app/electrom.js](https://github.com/electron-modules/electron-windows/blob/master/app/electrom.js)
+
+- [./example/main.ts](./example/main.ts)
+- [electron-modules/electron-windows/blob/master/app/electrom.js](https://github.com/electron-modules/electron-windows/blob/master/app/electrom.js)
 
 ```typescript
 // main process: import electrom
