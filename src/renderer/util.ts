@@ -57,3 +57,22 @@ export const findCommonStringPlus = (strs: string[]) => {
   }
   return Math.min(...indexes);
 };
+
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const waitUntil = async (handle: () => boolean, options = { retryTime: 10, ms: 1000 }) => {
+  let retryTime = 0;
+  const p: any = async () => {
+    const isOk = handle();
+    if (!isOk) {
+      if (retryTime === options.retryTime) {
+        return false;
+      }
+      retryTime++;
+      await sleep(options.ms);
+      return await p();
+    }
+    return true;
+  };
+  return await p();
+};
