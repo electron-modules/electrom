@@ -7,6 +7,7 @@ import {
   EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME,
   IPC_BRIDGE_NAME,
 } from '../../src/renderer';
+import { waitUntil } from './util';
 
 import 'antd/dist/antd.css';
 
@@ -18,19 +19,9 @@ declare global {
   }
 }
 
-function getBridge() {
-  const params = new URLSearchParams(location.search);
-  const bridgeNameSpace = params.get('IPC_BRIDGE_NAME');
-  // @ts-ignore
-  return window[bridgeNameSpace || IPC_BRIDGE_NAME] || {};
-}
-
-const container = document.querySelector('#app');
-
 const App = () => {
   const [display, setDisplay] = useState(true);
   const { ipcRenderer, shell } = getBridge();
-  if (!ipcRenderer) return null;
   return (
     <>
       <StatusBoard
@@ -59,4 +50,25 @@ const App = () => {
   );
 };
 
-ReactDOM.render(<App />, container);
+const container = document.querySelector('#app');
+// @ts-ignore
+function getBridge() {
+  const params = new URLSearchParams(location.search);
+  // @ts-ignore
+  return window[params.get('IPC_BRIDGE_NAME') || IPC_BRIDGE_NAME];
+}
+
+async function whenBridgeReady() {
+  return await waitUntil(() => !!getBridge(), {
+    ms: 1000,
+    retryTime: 100,
+  });
+}
+
+whenBridgeReady()
+  .then(() => {
+    ReactDOM.render(<App />, container);
+  })
+  .catch(e => {
+    document.write(JSON.stringify(e, null, 2));
+  });
