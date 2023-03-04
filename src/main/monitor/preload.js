@@ -1,6 +1,6 @@
 'use strict';
 
-const { contextBridge, ipcRenderer, shell } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
   ipcRenderer: {
@@ -8,5 +8,4 @@ contextBridge.exposeInMainWorld('electron', {
     on: (channel, listener) => ipcRenderer.on(channel, listener),
     removeListener: (channel, listener) => ipcRenderer.removeListener(channel, listener),
   },
-  shell,
 });

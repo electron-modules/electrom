@@ -24,13 +24,13 @@ interface CpuStatus {
 // 测试共同字符串数量
 const MAX_COMMON_STRING_TEST = 3;
 
-const Footer = (props: { openExternal: (arg0: any) => void }) => {
+const Footer = (props: any) => {
   return (
     <footer>
       <a
         onClick={e => {
           e.preventDefault();
-          props.openExternal('https://github.com/electron-modules/electrom');
+          props.ipcRenderer.send(props.eventActionChannelName, 'openExternal', 'https://github.com/electron-modules/electrom');
         }}
       >
         Electrom
@@ -258,8 +258,15 @@ export const StatusBoard = (props: StatusBoardProps) => {
           onClick: () => setSelectedProcess(record),
         })}
       />
-      <BottomPanel processInfo={selectedProcess} ipcRenderer={props.ipcRenderer} eventActionChannelName={props.eventActionChannelName} />
-      <Footer openExternal={props.shell.openExternal} />
+      <BottomPanel
+        processInfo={selectedProcess}
+        ipcRenderer={props.ipcRenderer}
+        eventActionChannelName={props.eventActionChannelName}
+      />
+      <Footer
+        ipcRenderer={props.ipcRenderer}
+        eventActionChannelName={EVENT_ACTION_CHANNEL_NAME}
+      />
     </div>
   );
 };

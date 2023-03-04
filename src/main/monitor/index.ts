@@ -3,7 +3,7 @@ import { pick } from 'lodash';
 import path from 'path';
 import { promises as fs } from 'fs';
 import { EventEmitter } from 'events';
-import { app, BrowserWindow, webContents } from 'electron';
+import { app, BrowserWindow, webContents, shell } from 'electron';
 
 import { listProcesses } from './ps';
 import { EVENT_DATA_CHANNEL_NAME, EVENT_ACTION_CHANNEL_NAME } from '../../common/constants';
@@ -135,6 +135,8 @@ export class Monitor extends EventEmitter {
           }
         } else if (action === 'killProcess') {
           process.kill(params.pid);
+        } else if (action === 'openExternal') {
+          shell.openExternal(params);
         }
       }
     });

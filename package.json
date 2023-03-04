@@ -1,6 +1,6 @@
 {
   "name": "electrom",
-  "version": "19.1.2",
+  "version": "19.2.0",
   "description": "Electrom is a resource management solution for Electron applications, which is convenient for performance management and friendly debugging of multiple windows",
   "scripts": {
     "build": "sh ./build.sh",
@@ -61,7 +61,7 @@
     "css-loader": "^0.28.8",
     "css-minimizer-webpack-plugin": "^4.2.2",
     "detect-port": "1",
-    "electron": "18",
+    "electron": "22",
     "electron-windows": "18",
     "eslint": "^7.32.0",
     "git-contributor": "*",
