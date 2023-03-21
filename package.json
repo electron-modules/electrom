@@ -1,6 +1,6 @@
 {
   "name": "electrom",
-  "version": "19.2.0",
+  "version": "19.3.0",
   "description": "Electrom is a resource management solution for Electron applications, which is convenient for performance management and friendly debugging of multiple windows",
   "scripts": {
     "build": "sh ./build.sh",
@@ -40,11 +40,11 @@
     "url": "https://github.com/electron-modules/electrom"
   },
   "dependencies": {
-    "debug": "4.1.1",
-    "filesize": "^6.1.0",
-    "lodash": "4.17.15",
-    "mkdirp": "0.5.1",
-    "moment": "2.24.0"
+    "debug": "4",
+    "filesize": "6",
+    "lodash": "4",
+    "mkdirp": "1",
+    "moment": "2"
   },
   "devDependencies": {
     "@applint/spec": "^1.2.0",
