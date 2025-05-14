@@ -93,8 +93,8 @@ const useViewModel = (props: StatusBoardProps) => {
             <span className={styles.desc}>
               <span>id:{webContentInfo.id}</span>
               <span>type:{webContentInfo.type}</span>
-              {display.map((item) => (
-                <span>{item}</span>
+              {display.map((textOrElement, index) => (
+                <span key={index}>{textOrElement}</span>
               ))}
             </span>
           </>
@@ -173,7 +173,7 @@ const useViewModel = (props: StatusBoardProps) => {
       title: 'Action',
       dataIndex: 'type',
       width: '60px',
-      fixed: 'left',
+      fixed: 'right',
       render: (type: string, item) => {
         const isDevtoolsSelf = !!item.webContentInfo?.url.startsWith('devtools://devtools');
         return (
