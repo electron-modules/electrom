@@ -40,6 +40,7 @@
     "url": "https://github.com/electron-modules/electrom"
   },
   "dependencies": {
+    "@ant-design/icons": "4",
     "debug": "4",
     "filesize": "6",
     "lodash": "4",

@@ -182,7 +182,7 @@ const useViewModel = (props: StatusBoardProps) => {
             {type === 'Tab' && !isDevtoolsSelf && (
               <BugOutlined
                 title="debug"
-                onClick={(e) => {
+                onClick={(e: any) => {
                   e.stopPropagation();
                   openDevTools(item.webContentInfo);
                 }}
