@@ -44,7 +44,7 @@
     "debug": "4",
     "filesize": "6",
     "lodash": "4",
-    "mkdirp": "0.5.1",
+    "mkdirp": "1.0.4",
     "moment": "2"
   },
   "devDependencies": {
