@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import { promises as fsp } from 'fs';
 import url from 'url';
 import { app, BrowserWindow } from 'electron';
@@ -78,19 +79,22 @@ app.on('ready', async () => {
   // You can also change options after construction:
   // monitor.setOptions({ threshold: 3_000 });
 
-  // Use a named function so we can cleanly remove the listener when the window closes.
+  // Start collecting metrics immediately — independent of any window loading.
+  monitor.start();
+
+  // Use named listener functions so each window's subscription can be cleanly
+  // removed when that window closes, without affecting other windows.
   const onDashboardData = (data: any) => {
-    if (dashboardWin && !dashboardWin.isDestroyed() && dashboardWin.webContents && !dashboardWin.webContents.isDestroyed()) {
+    if (!dashboardWin.isDestroyed() && !dashboardWin.webContents.isDestroyed()) {
       dashboardWin.webContents.send(EVENT_DATA_CHANNEL_NAME, data);
     }
   };
 
-  dashboardWin.webContents.on('dom-ready', () => {
-    // Forward metrics events from main to the renderer.
+  // Use `once` to avoid stacking duplicate listeners if the page navigates.
+  dashboardWin.webContents.once('dom-ready', () => {
     monitor.on(EVENT_DATA_CHANNEL_NAME, onDashboardData);
-    // Allow dashboard to send actions back (openDevTools, killProcess, openExternal).
+    // Allow the dashboard to send actions back to main (openDevTools, killProcess, openExternal).
     monitor.bindEventToWindow(dashboardWin);
-    monitor.start();
   });
 
   dashboardWin.on('closed', () => monitor.removeListener(EVENT_DATA_CHANNEL_NAME, onDashboardData));
@@ -99,19 +103,22 @@ app.on('ready', async () => {
   // ───────────────────────────────────────────────────────────────────────────
   // Section 3 ─ Main application window (your own renderer page)
   //
-  // This window also uses BROWSER_WINDOW_PRELOAD_PATH so it can receive
+  // This window uses BROWSER_WINDOW_PRELOAD_PATH so it can receive
   // EVENT_DATA_CHANNEL_NAME and render the PerfBoard FPS/memory overlay.
+  //
+  // `bindEventToWindow` is called here too so the renderer can trigger actions
+  // like openDevTools and killProcess from within the app's own UI if desired.
   // ───────────────────────────────────────────────────────────────────────────
   const mainWin = createBrowserWindow();
   mainWin.loadURL(getRendererUrl());
 
   const onMainWinData = (data: any) => {
-    if (mainWin && !mainWin.isDestroyed() && mainWin.webContents && !mainWin.webContents.isDestroyed()) {
+    if (!mainWin.isDestroyed() && !mainWin.webContents.isDestroyed()) {
       mainWin.webContents.send(EVENT_DATA_CHANNEL_NAME, data);
     }
   };
 
-  mainWin.webContents.on('dom-ready', () => {
+  mainWin.webContents.once('dom-ready', () => {
     monitor.on(EVENT_DATA_CHANNEL_NAME, onMainWinData);
     monitor.bindEventToWindow(mainWin);
   });
@@ -140,8 +147,11 @@ app.on('ready', async () => {
 // Reads all JSON snapshots written by Monitor's dumpDir, then:
 //   - prints a plain-text avg/max/min table to stdout
 //   - writes an HTML report to dumpDir/report.html (open in any browser)
+//
+// Note: `before-quit` handlers must be synchronous — Electron does not await
+// Promises returned from event listeners, so we use synchronous fs APIs here.
 // ─────────────────────────────────────────────────────────────────────────────
-app.on('before-quit', async () => {
+app.on('before-quit', () => {
   try {
     const snapshots = pickDataFromDir(dumpDir);
     if (!snapshots.length) return;
@@ -151,7 +161,7 @@ app.on('before-quit', async () => {
 
     const html = renderHtmlReporter(snapshots);
     const reportPath = path.join(dumpDir, 'report.html');
-    await fsp.writeFile(reportPath, html, 'utf8');
+    fs.writeFileSync(reportPath, html, 'utf8');
     console.log(`[electrom] HTML report saved to: ${reportPath}`);
   } catch (e) {
     console.error('[electrom] Reporter error:', e);
