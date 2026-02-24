@@ -78,20 +78,22 @@ app.on('ready', async () => {
   // You can also change options after construction:
   // monitor.setOptions({ threshold: 3_000 });
 
+  // Use a named function so we can cleanly remove the listener when the window closes.
+  const onDashboardData = (data: any) => {
+    if (dashboardWin && !dashboardWin.isDestroyed() && dashboardWin.webContents && !dashboardWin.webContents.isDestroyed()) {
+      dashboardWin.webContents.send(EVENT_DATA_CHANNEL_NAME, data);
+    }
+  };
+
   dashboardWin.webContents.on('dom-ready', () => {
     // Forward metrics events from main to the renderer.
-    // Guard against a destroyed window to avoid crashes.
-    monitor.removeAllListeners(EVENT_DATA_CHANNEL_NAME);
-    monitor.on(EVENT_DATA_CHANNEL_NAME, (data: any) => {
-      if (dashboardWin && !dashboardWin.isDestroyed() && dashboardWin.webContents && !dashboardWin.webContents.isDestroyed()) {
-        dashboardWin.webContents.send(EVENT_DATA_CHANNEL_NAME, data);
-      }
-    });
+    monitor.on(EVENT_DATA_CHANNEL_NAME, onDashboardData);
     // Allow dashboard to send actions back (openDevTools, killProcess, openExternal).
     monitor.bindEventToWindow(dashboardWin);
     monitor.start();
   });
 
+  dashboardWin.on('closed', () => monitor.removeListener(EVENT_DATA_CHANNEL_NAME, onDashboardData));
   dashboardWin.once('ready-to-show', () => dashboardWin.show());
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -102,14 +104,19 @@ app.on('ready', async () => {
   // ───────────────────────────────────────────────────────────────────────────
   const mainWin = createBrowserWindow();
   mainWin.loadURL(getRendererUrl());
+
+  const onMainWinData = (data: any) => {
+    if (mainWin && !mainWin.isDestroyed() && mainWin.webContents && !mainWin.webContents.isDestroyed()) {
+      mainWin.webContents.send(EVENT_DATA_CHANNEL_NAME, data);
+    }
+  };
+
   mainWin.webContents.on('dom-ready', () => {
-    monitor.on(EVENT_DATA_CHANNEL_NAME, (data: any) => {
-      if (mainWin && !mainWin.isDestroyed() && mainWin.webContents && !mainWin.webContents.isDestroyed()) {
-        mainWin.webContents.send(EVENT_DATA_CHANNEL_NAME, data);
-      }
-    });
+    monitor.on(EVENT_DATA_CHANNEL_NAME, onMainWinData);
     monitor.bindEventToWindow(mainWin);
   });
+
+  mainWin.on('closed', () => monitor.removeListener(EVENT_DATA_CHANNEL_NAME, onMainWinData));
   mainWin.once('ready-to-show', () => mainWin.show());
 
   // ───────────────────────────────────────────────────────────────────────────
