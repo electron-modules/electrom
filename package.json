@@ -113,5 +113,10 @@
       "dist"
     ]
   },
-  "license": "MIT"
+  "license": "MIT",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron"
+    ]
+  }
 }
